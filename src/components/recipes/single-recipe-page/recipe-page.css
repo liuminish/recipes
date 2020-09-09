@@ -1,0 +1,94 @@
+h2 {
+    text-align: center;
+}
+
+
+.recipe-page {
+    background-color: white;
+    opacity: 0.95;
+    margin: auto;
+    overflow: auto;
+    height: 100vh;
+    width: 60vw;
+}
+
+/* styles for recipe page part one - picture, title and information */
+
+.recipe-page-part-one {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px auto;
+    height: 300px;
+    width: 80%;
+}
+
+.recipe-page-image-container {
+    height: 100%;
+    width: 40%;
+    overflow: hidden;
+}
+
+.recipe-page h1 {
+    margin: 0;
+    padding-bottom: 20px;
+    text-align: left;
+    font-size: 50px;
+    color: black;
+    border-bottom: dotted 2px grey;
+}
+
+.recipe-title-info {
+    padding-right: 15px;
+    width: 50%;
+}
+
+.recipe-information {
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.recipe-information p {
+    display: flex;
+    align-items: center;
+}
+
+/* styles for ingredient list and instructions list */
+
+.recipe-page-part-two {
+    display: flex;
+    justify-content: space-evenly;
+    margin: auto;
+    width: 80%;
+}
+
+.recipe-page-part-two h2 {
+    border-bottom: dotted 2px grey;
+    padding: 5px;
+    text-align: left;
+}
+
+.ingredients-list {
+    margin: 0px 20px;
+    width:30%;
+    text-align: left;
+    border-radius: 5px;
+}
+
+.preparation-list {
+    margin: 0px 20px;
+    padding-right: 15px;
+    width: 70%;
+    text-align: left;
+    border-radius: 5px;
+}
+
+ul li {
+    margin-bottom: 5px;
+}
+
+ol li {
+    margin-bottom: 15px;
+   
+}

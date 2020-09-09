@@ -1,0 +1,24 @@
+.recipes-container {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.no-recipes-found {
+    color: white;
+    font-size: 40px;
+}
+
+.no-recipes-found p {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.no-recipes-found a {
+    color: white
+}
+
+.no-recipes-found a:hover {
+    color: #f77f00
+}

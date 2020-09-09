@@ -1,0 +1,33 @@
+.recipe-container {
+    background-color: white;
+    margin: 15px 10px;
+    height: auto;
+    width: 300px;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+.image-container {
+    height:200px;
+    width: 300px;
+}
+
+img {
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.recipe-quick-info {
+    padding: 2px 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.recipe-quick-info-time p {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: 0;
+    padding: 0;
+}

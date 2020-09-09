@@ -1,0 +1,249 @@
+/* styles for main container, secondary container and rows */
+
+.add-recipe-main-container {
+    margin: 0 auto;
+    background-color: white;
+    opacity: 0.95;
+    height: 92.5vh;
+    width: 50vw;
+    overflow: auto;
+}
+
+.add-recipe-main-container h1 {
+    margin-top: 0;
+    padding: 20px;
+    color: black;
+}
+
+.add-recipe-individual-row {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+    font-size: 25px;
+}
+
+.add-recipe-divider {
+    opacity: 0.6;
+    margin: 0 100px;
+    border-bottom: dotted 2px #ffbb6e;
+}
+
+/* styles for container with key and value pair */
+
+.add-recipe-key {
+    width: 20%;
+    text-align: left;
+}
+
+.add-recipe-value {
+    width: 60%;
+    text-align: left;
+}
+
+.add-recipe-value input[type=text] {
+    width: 80%;
+    font-size: 25px;
+}
+
+.add-recipe-value input[type=number] {
+    margin-right: 10px;
+    width: 10%;
+    font-size: 25px;
+}
+
+/* styles for image */
+
+.add-recipe-image-container {
+    margin-top: 10px;
+    width: 290px;
+    height: 200px;
+}
+
+/* styles for container with checkboxes */
+
+.add-recipe-main-checkbox-container {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+}
+
+.add-recipe-checkbox-container {
+    padding: 0 15px;
+    width: 15%;
+    min-width: 180px;
+    text-align: left;
+}
+
+.add-recipe-checkbox {
+    font-size: 20px;
+    margin: 5px 0 3px 0;
+    border-top: dotted 2px grey;
+}
+
+/* styles for ingredients */
+
+.add-recipe-ingre-container {
+    width: 60%;
+    text-align: left;
+}
+
+.add-recipe-new-ingre {
+    display: flex;
+    align-items: center;
+}
+
+.add-recipe-new-ingre  input[type=number] {
+    margin-right: 10px;
+    width: 10%;
+    font-size: 25px;
+}
+
+.add-recipe-new-ingre input[type=text] {
+    width: 36%;
+    font-size: 25px;
+}
+
+.add-recipe-new-ingre select {
+    margin-right: 10px;
+    font-size: 25px;
+}
+
+#add-button {
+    font-size: 30px;
+    margin-left: 10px;
+}
+
+#add-button:hover {
+    color: #f77f00;
+    cursor: pointer;
+}
+
+.add-recipe-ingre-list {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.add-recipe-ingre-list-item {
+    display: flex;
+    align-content: center;
+    margin: 10px 4px 5px 0;
+    padding-right: 5px;
+    width: fit-content;
+    font-size: 20px;
+    border: solid 1px grey;
+    border-radius: 5px;
+}
+
+.add-recipe-ingre-icon {
+    margin: auto;
+    padding: 5px 0;
+}
+
+.add-recipe-ingre-icon:hover {
+    cursor: pointer;
+    color: #f77f00;
+}
+
+/* styles for instructions */
+
+.add-recipe-instructions {
+    width: 60%;
+    text-align: left;
+}
+
+.add-recipe-new-instructions {
+    display: flex;
+    align-content: flex-start;
+    text-align: left;
+}
+
+.add-recipe-new-instructions textarea {
+    margin: 0 4px 5px 0;
+    width: 82%;
+    max-width: 74%;
+    font-size: 15px;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: dotted 1px grey;
+}
+
+.add-recipe-instructions-list-container {
+    margin-bottom: 10px;
+    border-radius: 5px;
+    
+}
+
+.add-recipe-instructions-list-row {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    width: 90%;
+}
+
+.add-recipe-instruction-number {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    vertical-align: center;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    width: 5%;
+    font-size: 15px;
+    border-bottom: dotted 1px grey;
+}
+
+.add-recipe-instruction-item {
+    display: flex;
+    align-content: center;
+    margin: 0 4px 5px 0;
+    width: 82%;
+    font-size: 15px;
+    border-bottom: dotted 1px grey;
+}
+
+.add-recipe-edit-instruction {
+    margin: auto;
+    display: flex;
+    align-content: center;
+}
+
+.add-recipe-edit-button:hover {
+    color: #f77f00;
+    cursor: pointer;
+}
+
+/* styles for notes */
+.add-recipe-value textarea {
+    width: 80%;
+    max-width: 80%;
+    height: auto;
+}
+
+/* styles for save recipe button */
+.add-recipe-form-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.add-recipe-form-button {
+    background-color: white;
+    opacity: 0.9;
+    margin: 20px 10px;
+    padding: 5px;
+    width: 250px;
+    text-align: center;
+    color: #f77f00;
+    font-size: 30px;
+    border: solid 2px #f77f00;
+    border-radius: 5px;
+}
+
+.add-recipe-form-button:hover {
+    background-color: #f77f00;
+    opacity: 0.9;
+    color: white;
+    cursor: pointer;
+    opacity: 1;
+}

@@ -1,0 +1,16 @@
+/* checkbox styles */
+.checkbox-container {
+    margin: 3px 0;
+}
+
+/* itemized list styles */
+.itemized-list, .itemized-list-extended, .itemized-list-no-delete {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.itemized-list:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
