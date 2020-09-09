@@ -46,7 +46,33 @@ fetchData.getAllCuisineTypes = () => {
 
 // GET all meal types
 
+fetchData.getAllMealTypes = () => {
+  const url = `${baseUrl}/meal-types`;
+
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve([]));
+    }
+    return response.json().then(jsonResponse => {
+      return jsonResponse
+    });
+  });
+}
+
 // GET all cooking styles
+
+fetchData.getAllCookingStyles = () => {
+  const url = `${baseUrl}/cooking-styles`;
+
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve([]));
+    }
+    return response.json().then(jsonResponse => {
+      return jsonResponse
+    });
+  });
+}
 
 // GET one recipe
 fetchData.getRecipe = recipeId => {
@@ -121,66 +147,6 @@ fetchData.createRecipe = (recipeId, instruction) => {
   });
 };
 
-// POST/create meal types for recipe
-fetchData.createRecipe = (recipeId, mealType) => {
-  const url = `${baseUrl}/recipe/${recipeId}/meals`;
-  const fetchOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({mealTypes: mealType})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return jsonResponse.mealType;
-    });
-  });
-};
-
-// POST/create cuisine types for recipe
-fetchData.createRecipe = (recipeId, cuisineType) => {
-  const url = `${baseUrl}/recipe/${recipeId}/cuisines`;
-  const fetchOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({cuisineTypes: cuisineType})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return jsonResponse.cuisineType;
-    });
-  });
-};
-
-// POST/create cooking styles for recipe
-fetchData.createRecipe = (recipeId, cookingStyle) => {
-  const url = `${baseUrl}/recipe/${recipeId}/styles`;
-  const fetchOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({cookingStyles: cookingStyle})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return jsonResponse.cookingStyle;
-    });
-  });
-};
-
 // PUT/update one recipe
 fetchData.updateRecipe = recipe => {
   const url = `${baseUrl}/recipes/${recipe.id}`;
@@ -197,66 +163,6 @@ fetchData.updateRecipe = recipe => {
     }
     return response.json().then(jsonResponse => {
       return jsonResponse.recipe;
-    });
-  });
-};
-
-// PUT/update meal type for one recipe
-fetchData.updateRecipe = (recipeId, mealType) => {
-  const url = `${baseUrl}/recipes/${recipeId}`;
-  const fetchOptions = {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({mealType: mealType})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return jsonResponse.mealType;
-    });
-  });
-};
-
-// PUT/update cuisine type for one recipe
-fetchData.updateRecipe = (recipeId, cuisineType) => {
-  const url = `${baseUrl}/recipes/${recipeId}`;
-  const fetchOptions = {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({cuisineTypes: cuisineType})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return jsonResponse.cuisineType;
-    });
-  });
-};
-
-// PUT/update cooking style for one recipe
-fetchData.updateRecipe = (recipeId, cookingStyle) => {
-  const url = `${baseUrl}/recipes/${recipeId}`;
-  const fetchOptions = {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({cookingStyles: cookingStyle})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return jsonResponse.cookingStyle;
     });
   });
 };

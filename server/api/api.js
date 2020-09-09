@@ -4,14 +4,14 @@ const apiRouter = express.Router();
 const recipesRouter = require('./recipes');
 apiRouter.use('/recipes', recipesRouter);
 
-const cuisinesRouter = require('./cuisine-types');
+const cuisinesRouter = require('./cuisines');
 apiRouter.use('/cuisine-types', cuisinesRouter);
 
-const mealsRouter = require('./meal-types');
+const mealsRouter = require('./meals');
 apiRouter.use('/meal-types', mealsRouter);
 
 
-const stylesRouter = require('./cooking-styles');
+const stylesRouter = require('./styles');
 apiRouter.use('/cooking-styles', stylesRouter);
 
 module.exports = apiRouter;

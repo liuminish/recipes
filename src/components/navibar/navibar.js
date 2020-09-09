@@ -45,6 +45,9 @@ class Menu extends React.Component {
     
     render() {
         let displayCategory = { display: this.state.displayCategory ? 'block' : 'none' };
+        const cuisineList = this.props.cuisineTypes.map(cuisine => {
+            return cuisine.type
+        })
 
         return (
             <div className="full-menu">
@@ -54,10 +57,12 @@ class Menu extends React.Component {
                 <div className="menu" style={{ display: this.state.displayMenu ? 'block' : 'none' }}>
                     <p className="link" id="main-menu-item" onClick={this.changeCatDisplay}><Link to='/all-recipes'><BiFoodMenu />Recipes</Link></p>
                     <p className="link" id="category" style={displayCategory} onClick={this.props.changeAll}>All</p>
-                    <p className="link" id="category" style={displayCategory} onClick={this.props.changeChinese}>Chinese</p>
-                    <p className="link" id="category" style={displayCategory} onClick={this.props.changeFilipino}>Filipino</p>
-                    <p className="link" id="category" style={displayCategory} onClick={this.props.changeThai}>Thai</p>
-                    <p className="link" id="category" style={displayCategory} onClick={this.props.changeWestern}>Western</p>
+                    {cuisineList.map(type => {
+                        const displayName = type.charAt(0).toUpperCase() + type.slice(1);
+                        return (
+                            <p className="link" id="category" style={displayCategory} onClick={() => {this.props.changeCuisine(type)}}>{displayName}</p>
+                        )
+                    })}
                     <Link to='/search-by-recipe'><p className="link" id="main-menu-item"><BiSearchAlt />Search</p></Link>
                     <Link to='/add-recipe'><p className="link" id="main-menu-item"><BiEdit />Add/Edit</p></Link>
                 </div>

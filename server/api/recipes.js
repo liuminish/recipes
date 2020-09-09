@@ -91,28 +91,13 @@ recipesRouter.post('/', (req, res, next) => {
             } else {
                 const recipeId = this.lastID;
 
-                db.serialize(function() {
-
-                    // adding ingredients for latest recipe
-                    db.run(`INSERT INTO Ingredients (name, image, time, servings, notes) VALUES ($name, $image, $time, $servings, $notes)`, {$id: recipeId}, function(err, ingredients) {
-                        if (err) {
-                            next(err)
-                        } else {
-                            recipe.ingredients = ingredients;
-                        }
-                    })
-
-                })
-
                 // retrieving last posted recipe
                 db.get(`SELECT * FROM Recipes WHERE id=$id`, {$id: recipeId}, function(err, recipe) {
                     if (err) {
                         next(err)
                     } else {
                         recipe = recipe;
-                        
-                        
-
+ 
                     }
                 })
             }
@@ -129,7 +114,7 @@ recipesRouter.put('/:recipeId', (req, res, next) => {
     const values = {$id: req.params.recipeId, $name: name, $image: image, $time: time, $servings: servings, $notes: notes};
 
     if (!name || !time || !servings) {
-        next(err)
+        res.sendStatus(400)
     } else {
         db.run(sql, values, (err) => {
             if (err) {
@@ -150,30 +135,6 @@ recipesRouter.put('/:recipeId', (req, res, next) => {
 // DELETE one recipe
 recipesRouter.delete('/:recipeId', (req, res, next) => {
     db.serialize(() => {
-
-        db.get(`SELECT * FROM MealTypes WHERE recipe_id=$id`, {$id: req.params.recipeId}, (err, meal) => {
-            if (err) {
-                next(err)
-            } else if (meal) {
-                res.sendStatus(400)
-            }
-        })
-
-        db.get(`SELECT * FROM CuisineTypes WHERE recipe_id=$id`, {$id: req.params.recipeId}, (err, cuisine) => {
-            if (err) {
-                next(err)
-            } else if (cuisine) {
-                res.sendStatus(400)
-            }
-        })
-
-        db.get(`SELECT * FROM CookingStyles WHERE recipe_id=$id`, {$id: req.params.recipeId}, (err, styles) => {
-            if (err) {
-                next(err)
-            } else if (styles) {
-                res.sendStatus(400)
-            }
-        })
 
         db.get(`SELECT * FROM Ingredients WHERE recipe_id=$id`, {$id: req.params.recipeId}, (err, ingredient) => {
             if (err) {

@@ -11,13 +11,10 @@ class RecipeList extends React.Component {
         const currentCuisine = this.props.cuisine;
         const foundRecipes = [];
         this.props.recipes.map(recipe => {
-            const tempArray = ['chinese']
-            if (tempArray.find(cuisine => cuisine === currentCuisine)) {
+            if (recipe.cuisineType.find(cuisine => cuisine === currentCuisine)) {
                 foundRecipes.push(recipe)
             }
         });
-
-        console.log(foundRecipes)
 
         if (currentCuisine === 'all') {
             return (
