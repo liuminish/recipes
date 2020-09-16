@@ -32,30 +32,30 @@ ingredientsRouter.get('/', (req, res, next) => {
     })
 })
 
-// GET one ingredient for specific recipe
-ingredientsRouter.get('/', (req, res, next) => {
-    res.status(200).json({ingredient: req.ingredient})
-})
 
-// POST/add one ingredient for specific recipe
+// POST/add all ingredients for specific recipe
 ingredientsRouter.post('/', (req, res, next) => {
-    const { amount, unit, ingredient, recipeId } = req.body.ingredient;
-    const sql = `INSERT INTO Ingredients (amount, unit, ingredient, recipe_id) VALUES ($amount, $unit, $ingredient, $recipeId)`;
-    const values = {$amount: amount, $unit: unit, $ingredient: ingredient, $recipeId: req.params.recipeId};
 
-    db.run(sql, values, function(err) {
-        if (err) {
-            next(err)
-        } else {
-            db.get(`SELECT * FROM Ingredients WHERE Ingredients.id=$id`, {$id: this.lastID}, function(err, ingredient) {
-                if (err) {
-                    next(err)
-                } else {
-                    res.status(201).json({ingredient: ingredient})
-                }
-            })
-        }
+    req.body.ingredients.map(ingredient => {
+        const { amount, unit, ingredient } = ingredient;
+        const sql = `INSERT INTO Ingredients (amount, unit, ingredient, recipe_id) VALUES ($amount, $unit, $ingredient, $recipeId)`;
+        const values = {$amount: amount, $unit: unit, $ingredient: ingredient, $recipeId: req.params.recipeId};
+
+        db.run(sql, values, function(err) {
+            if (err) {
+                next(err)
+            } else {
+                db.get(`SELECT * FROM Ingredients WHERE Ingredients.id=$id`, {$id: this.lastID}, function(err, ingredient) {
+                    if (err) {
+                        next(err)
+                    } else {
+                        res.status(201).json({ingredient: ingredient})
+                    }
+                })
+            }
+        })
     })
+
 })
 
 // PUT/update one ingredient for specific recipe

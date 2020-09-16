@@ -4,9 +4,6 @@ const recipesRouter = express.Router();
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
-const ingredientsRouter = require('./ingredients');
-const instructionsRouter = require('./instructions');
-
 // route param for recipe
 recipesRouter.param('recipeId', (req, res, next, id) => {
 
@@ -25,79 +22,194 @@ recipesRouter.param('recipeId', (req, res, next, id) => {
 
 })
 
-recipesRouter.use('/:recipeId/ingredients', ingredientsRouter);
-recipesRouter.use('/:recipeId/instructions', instructionsRouter);
+// GET number of recipes
+recipesRouter.get('/total', (req, res, next) => {
 
-// GET all recipes (bare minimum) + meal/cuisine/cooking style tables
-recipesRouter.get('/', (req, res, next) => {
-
-    db.all(`SELECT * FROM Recipes`, (err, recipes) => {
+    db.all(`SELECT COUNT(*) FROM Recipes`, (err, total) => {
 
         if (err) {
             next(err)
         } else {
-            res.status(200).json({recipes: recipes})
+            res.status(200).send(total)
         }
 
     })
 
 })
 
-// GET all recipes with name matching search term
+
+// GET all recipes 
+recipesRouter.get('/', (req, res, next) => {
+
+    if (req.query) {
+        const name = req.query.name ? req.query.name : '';
+
+        // search with type filters
+        if (req.query.cuisineType) {
+            const { cuisineType, mealType, cookingStyle } = req.query;
+            let sqlCuisine = '';
+            let sqlMeal = '';
+            let sqlStyle = '';
+
+            if (Array.isArray(cuisineType)) {
+                sqlCuisine = cuisineType.reduce((acc, curr) => {
+                    const str = `cuisine_type LIKE '%${curr}%'`
+                    
+                    if (acc) {
+                        return acc = `${acc} OR ${str}`
+                    } else
+                    return str
+    
+                }, '');
+            } else {
+                sqlCuisine = `cuisine_type LIKE '%${cuisineType}%'`
+            }
+
+            if (Array.isArray(mealType)) {
+                sqlMeal = mealType.reduce((acc, curr) => {
+                    const str = `meal_type LIKE '%${curr}%'`
+                    
+                    if (acc) {
+                        return acc = `${acc} OR ${str}`
+                    } else
+                    return str
+    
+                }, '');
+            } else {
+                sqlMeal = `meal_type LIKE '%${mealType}%'`
+            }
+                
+            if (Array.isArray(cookingStyle)) {
+                sqlStyle = cookingStyle.reduce((acc, curr) => {
+                    const str = `cooking_style LIKE '%${curr}%'`
+                    
+                    if (acc) {
+                        return acc = `${acc} OR ${str}`
+                    } else
+                    return str
+    
+                }, '');
+            } else {
+                sqlStyle = `cooking_style LIKE '%${cookingStyle}%'`
+            }
+            
+            const sql = `SELECT * FROM Recipes WHERE name LIKE '%${name}%' AND (${sqlCuisine}) AND (${sqlMeal}) AND (${sqlStyle})`;
+
+            db.all(sql, (err, recipes) => {
+                if (err) {
+                    next(err)
+                } else {
+                    res.status(200).json({recipes: recipes})
+                }
+            })
+        } 
+
+        // search with ingredient filters
+        else if (req.query.inclIngre || req.query.exclIngre) {
+            const { inclIngre, exclIngre } = req.query;
+            let sqlInclIngre = '';
+            let sqlExclIngre = '';
+
+            if (Array.isArray(inclIngre)) {
+                sqlInclIngre = inclIngre.reduce((acc, curr) => {
+                    const str = `ingredients LIKE '%${curr}%'`
+                    
+                    if (acc) {
+                        return acc = `${acc} OR ${str}`
+                    } else
+                    return str
+    
+                }, '');
+            } else {
+                sqlInclIngre = `ingredients LIKE '%${inclIngre}%'`
+            }
+            
+            if (Array.isArray(exclIngre)) {
+                sqlExclIngre = exclIngre.reduce((acc, curr) => {
+                    const str = `ingredients NOT LIKE '%${curr}%'`
+                    
+                    if (acc) {
+                        return acc = `${acc} AND ${str}`
+                    } else
+                    return str
+    
+                }, '');
+            } else {
+                sqlExclIngre = `ingredients NOT LIKE '%${exclIngre}%'`
+            }
+            
+            
+            const sql = `SELECT * FROM Recipes WHERE name LIKE '%${name}%' AND (${sqlInclIngre}) AND ${sqlExclIngre}`;
+            console.log(sql);
+            
+            db.all(sql, (err, recipes) => {
+                if (err) {
+                    next(err)
+                } else {
+                    res.status(200).json({recipes: recipes})
+                }
+            })
+        }
+
+        // name search with no filters
+        else if (!req.query.ingredients && !req.query.cuisine) {
+            const sql = `SELECT * FROM Recipes WHERE name LIKE '%${name}%'`;
+            
+            db.all(sql, (err, recipes) => {
+                if (err) {
+                    next(err)
+                } else {
+                    res.status(200).json({recipes: recipes})
+                }
+            })
+        }
+    }
+    
+    // no search
+    else { 
+        db.all(`SELECT * FROM Recipes`, (err, recipes) => {
+
+            if (err) {
+                next(err)
+            } else {
+                res.status(200).json({recipes: recipes})
+            }
+    
+        })
+    }
+    
+})
 
 
-// GET one recipe (with full details)
+// GET one recipe 
 recipesRouter.get('/:recipeId', (req, res, next) => {
-
-    db.serialize(() => {
-
-        db.all(`SELECT * FROM Ingredients WHERE recipe_id=$id`, {$id: req.params.recipeId}, (err, ingredients) => {
-            
-            if (err) {
-                next(err)
-            } else {
-                req.recipe.ingredients = ingredients
-            }
-
-        })
-
-        db.all(`SELECT * FROM Instructions WHERE recipe_id=$id`, {$id: req.params.recipeId}, (err, instructions) => {
-            
-            if (err) {
-                next(err)
-            } else {
-                req.recipe.instructions = instructions;
-                res.status(200).json({recipe: req.recipe})
-            }
-
-        })
-
-    })
-
+    res.status(200).json({recipe: req.recipe})
 })
 
 // POST/add one recipe
 recipesRouter.post('/', (req, res, next) => {
 
-    const { name, image, time, servings, notes } = req.body;
+    const { name, image, time, servings, cuisineTypes, mealTypes, cookingStyles, ingredients, instructions, notes } = req.body.recipe;
+    
 
-    const sql = `INSERT INTO Recipes (name, image, time, servings, notes) VALUES ($name, $image, $time, $servings, $notes)`;
-    const values = {$name: name, $image: image, $time: time, $servings: servings, $notes: notes};
+    const sql = `INSERT INTO Recipes (name, image, time, servings, cuisine_type, meal_type, cooking_style, ingredients, instructions, notes) VALUES ($name, $image, $time, $servings, $cuisineTypes, $mealTypes, $cookingStyles, $ingredients, $instructions, $notes)`;
+    const values = {$name: name, $image: image, $time: time, $servings: servings, $cuisineTypes: cuisineTypes, $mealTypes: mealTypes, $cookingStyles: cookingStyles, $ingredients: ingredients, $instructions: instructions, $notes: notes};
 
-    if (!name || !time || !servings) {
+    if (!name || !time || !servings || !cuisineTypes || !mealTypes || !cookingStyles || !ingredients || !instructions) {
+        res.sendStatus(400)
+    } else {
         db.run(sql, values, function(err) {
+
             if (err) {
                 next(err)
             } else {
-                const recipeId = this.lastID;
 
                 // retrieving last posted recipe
-                db.get(`SELECT * FROM Recipes WHERE id=$id`, {$id: recipeId}, function(err, recipe) {
+                db.get(`SELECT * FROM Recipes WHERE id=$id`, {$id: this.lastID}, function(err, recipe) {
                     if (err) {
                         next(err)
                     } else {
-                        recipe = recipe;
- 
+                        res.status(201).json({recipe: recipe});
                     }
                 })
             }
@@ -109,11 +221,11 @@ recipesRouter.post('/', (req, res, next) => {
 // PUT/update one recipe
 recipesRouter.put('/:recipeId', (req, res, next) => {
 
-    const { name, image, time, servings, notes } = req.body.recipe;
-    const sql = `UPDATE Recipes SET name=$name image=$image time=$time servings=$servings notes=$notes WHERE id=$id`;
-    const values = {$id: req.params.recipeId, $name: name, $image: image, $time: time, $servings: servings, $notes: notes};
+    const { name, image, time, servings, cuisineTypes, mealTypes, cookingStyles, ingredients, instructions, notes } = req.body.recipe;
+    const sql = `UPDATE Recipes SET name=$name, image=$image, time=$time, servings=$servings, cuisine_type=$cuisineTypes, meal_type=$mealTypes, cooking_style=$cookingStyles, ingredients=$ingredients, instructions=$instructions, notes=$notes WHERE id=$id`;
+    const values = {$id: req.params.recipeId, $name: name, $image: image, $time: time, $servings: servings, $cuisineTypes: cuisineTypes, $mealTypes: mealTypes, $cookingStyles: cookingStyles, $ingredients: ingredients, $instructions: instructions, $notes: notes};
 
-    if (!name || !time || !servings) {
+    if (!name || !time || !servings || !cuisineTypes || !mealTypes || !cookingStyles || !ingredients || !instructions) {
         res.sendStatus(400)
     } else {
         db.run(sql, values, (err) => {
@@ -134,33 +246,15 @@ recipesRouter.put('/:recipeId', (req, res, next) => {
 
 // DELETE one recipe
 recipesRouter.delete('/:recipeId', (req, res, next) => {
-    db.serialize(() => {
-
-        db.get(`SELECT * FROM Ingredients WHERE recipe_id=$id`, {$id: req.params.recipeId}, (err, ingredient) => {
-            if (err) {
-                next(err)
-            } else if (ingredient) {
-                res.sendStatus(400)
-            }
-        })
     
-        db.get(`SELECT * FROM Instructions WHERE recipe_id=$id`, {$id: req.params.recipeId}, (err, instruction) => {
-            if (err) {
-                next(err)
-            } else if (instruction) {
-                res.sendStatus(400)
-            }
-        })
+    db.run(`DELETE FROM Recipes WHERE id=$id`, {$id: req.params.recipeId}, (err) => {
+        if (err) {
+            next(err)
+        } else {
+            res.sendStatus(204)
+        }
+    })
 
-        db.run(`DELETE FROM Recipes WHERE id=$id`, {$id: req.params.recipeId}, (err) => {
-            if (err) {
-                next(err)
-            } else {
-                res.sendStatus(204)
-            }
-        })
-
-    }) 
 })
 
 module.exports = recipesRouter;

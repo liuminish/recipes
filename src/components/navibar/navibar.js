@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './navibar.css';
+import './Navibar.css';
 
 import { RiMenu5Line, RiRestaurant2Fill } from "react-icons/ri";
 import { BiSearchAlt, BiEdit, BiFoodMenu } from "react-icons/bi";
@@ -64,7 +64,7 @@ class Menu extends React.Component {
                         )
                     })}
                     <Link to='/search-by-recipe'><p className="link" id="main-menu-item"><BiSearchAlt />Search</p></Link>
-                    <Link to='/add-recipe'><p className="link" id="main-menu-item"><BiEdit />Add/Edit</p></Link>
+                    <Link to='/add-edit-recipe'><p className="link" id="main-menu-item"><BiEdit />Add New</p></Link>
                 </div>
             </div>
         )

@@ -1,5 +1,6 @@
 import React from 'react';
-import './searchbar.css';
+import './Searchbar.css';
+import { Link } from 'react-router-dom';
 import { RiSearchLine } from "react-icons/ri";
 
 class Searchbar extends React.Component {
@@ -30,11 +31,13 @@ class Searchbar extends React.Component {
     }
 
     handleSearch() {
-        console.log('search term is ' + this.state.searchValue);
-
-        this.setState({
-            searchValue: ''
-        })
+        if (this.state.searchValue === '') {
+            return;
+        } else {
+            const searchObject = {name: this.state.searchValue}
+            this.props.searchRecipes(searchObject);
+            this.setState({searchValue: ''})
+        }
         
     }
 
@@ -44,7 +47,7 @@ class Searchbar extends React.Component {
         return (
             <div className="quick-search">
                     <input className={inputClass} type="text" value={this.state.searchValue} onMouseEnter={this.makeInputVisible} onMouseLeave={this.makeInputInvisible} onChange={this.updateSearchValue} />
-                    <RiSearchLine className="link-color-unchanged" id="quick-search-logo" onClick={this.handleSearch} />
+                    <Link to="/search-results"><RiSearchLine className="link-color-unchanged" id="quick-search-logo" onClick={this.handleSearch} /></Link>
             </div> 
         )
     }

@@ -8,8 +8,9 @@ h2 {
     opacity: 0.95;
     margin: auto;
     overflow: auto;
-    height: 100vh;
+    height: 86.5vh;
     width: 60vw;
+    border-radius: 0 0 5px 5px; 
 }
 
 /* styles for recipe page part one - picture, title and information */
@@ -42,6 +43,15 @@ h2 {
     width: 50%;
 }
 
+.recipe-cat-container {
+    display: flex;
+}
+
+.recipe-cat {
+    color: #f77f00;
+    font-weight: 500;
+}
+
 .recipe-information {
     margin-top: 10px;
     width: 100%;
@@ -51,8 +61,9 @@ h2 {
 
 .recipe-information p {
     display: flex;
-    align-items: center;
+    align-items: top;
 }
+
 
 /* styles for ingredient list and instructions list */
 
@@ -91,4 +102,32 @@ ul li {
 ol li {
     margin-bottom: 15px;
    
+}
+
+/* styles for buttons */
+
+.edit-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+    height: 6vh;
+    width: 60vw;
+}
+
+.edit-buttons {
+    background-color: white;
+    opacity: 0.9;
+    margin: 10px 0;
+    padding: 5px;
+    width: 250px;
+    text-align: center;
+    color: #f77f00;
+    font-size: 30px;
+    border: solid 2px #f77f00;
+    border-radius: 5px;
+}
+
+.edit-buttons:hover {
+    cursor: pointer;
+    opacity: 1;
 }

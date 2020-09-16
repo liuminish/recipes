@@ -6,12 +6,14 @@ db.serialize(() => {
     db.run(`CREATE TABLE Recipes (
         id INTEGER NOT NULL,
         name TEXT NOT NULL,
-        image TEXT,
+        image TEXT DEFAULT '',
         time INTEGER NOT NULL,
         servings INTEGER NOT NULL,
         cuisine_type TEXT NOT NULL,
         meal_type TEXT NOT NULL,
         cooking_style TEXT NOT NULL,
+        ingredients TEXT NOT NULL,
+        instructions TEXT NOT NULL,
         notes TEXT,
         PRIMARY KEY (id)
         )`)
@@ -24,6 +26,26 @@ db.serialize(() => {
         type TEXT NOT NULL,
         PRIMARY KEY (id)
         )`)
+    db.run("INSERT INTO MealTypes (type) VALUES ('breakfast')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO MealTypes (type) VALUES ('desserts')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO MealTypes (type) VALUES ('dinner')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO MealTypes (type) VALUES ('snacks')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
 })
 
 db.serialize(() => {
@@ -33,6 +55,26 @@ db.serialize(() => {
         type TEXT NOT NULL,
         PRIMARY KEY (id)
         )`)
+    db.run("INSERT INTO CuisineTypes (type) VALUES ('chinese')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO CuisineTypes (type) VALUES ('filipino')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO CuisineTypes (type) VALUES ('thai')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO CuisineTypes (type) VALUES ('western')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
 })
 
 db.serialize(() => {
@@ -42,28 +84,114 @@ db.serialize(() => {
         type TEXT NOT NULL,
         PRIMARY KEY (id)
         )`)
+    db.run("INSERT INTO CookingStyles (type) VALUES ('easy')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO CookingStyles (type) VALUES ('instantpot')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO CookingStyles (type) VALUES ('panfry')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO CookingStyles (type) VALUES ('slowcook')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO CookingStyles (type) VALUES ('steamed')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO CookingStyles (type) VALUES ('vegetarian')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
 })
 
 db.serialize(() => {
-    db.run(`DROP TABLE IF EXISTS Ingredients`)
-    db.run(`CREATE TABLE Ingredients (
+    db.run(`DROP TABLE IF EXISTS Units`)
+    db.run(`CREATE TABLE Units (
         id INTEGER NOT NULL,
-        amount INTEGER NOT NULL,
-        unit TEXT NOT NULL,
-        ingredient TEXT NOT NULL,
-        recipe_id INTEGER NOT NULL,
-        PRIMARY KEY (id),
-        FOREIGN KEY (recipe_id) REFERENCES Recipes (id)
+        type TEXT,
+        PRIMARY KEY (id)
         )`)
-})
+    db.run("INSERT INTO Units (type) VALUES ('')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('teaspoon')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('tablespoon')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('cup')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('drop')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('dash')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('millilitre')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('litre')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('gram')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('kilogram')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('pinch')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('slice')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('piece')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('whole')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
 
-db.serialize(() => {
-    db.run(`DROP TABLE IF EXISTS Instructions`)
-    db.run(`CREATE TABLE Instructions (
-        id INTEGER NOT NULL,
-        instruction TEXT NOT NULL,
-        recipe_id INTEGER NOT NULL,
-        PRIMARY KEY (id),
-        FOREIGN KEY (recipe_id) REFERENCES Recipes (id)
-        )`)
 })

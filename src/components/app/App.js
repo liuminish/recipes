@@ -2,16 +2,17 @@ import React from 'react';
 import './App.css';
 
 // import main components
-import { Topbar, Menu } from '../navibar/navibar';
-import Searchbar from '../searches/searchbar/searchbar'
-import Mainpage from '../main-page/main-page';
+import { Topbar, Menu } from '../navibar/Navibar';
+import Searchbar from '../searches/searchbar/Searchbar'
+import Mainpage from '../main-page/MainPage';
 
 // import other components
-import AllRecipes from '../recipes/recipe-list-page/all-recipes';
-import RecipePage from '../recipes/single-recipe-page/recipe-page';
-import SearchByRecipe from '../searches/search-by/search-by-recipe';
-import SearchByIngre from '../searches/search-by/search-by-ingre';
-import AddRecipe from '../add-recipe/add-recipe';
+import AllRecipes from '../recipes/recipe-list-page/AllRecipes';
+import SearchResults from '../recipes/recipe-list-page/SearchResults';
+import RecipePage from '../recipes/single-recipe-page/RecipePage';
+import SearchByRecipe from '../searches/search-by/SearchByRecipe';
+import SearchByIngre from '../searches/search-by/SearchByIngre';
+import AddRecipe from '../add-recipe/AddRecipe';
 
 // import requests
 import fetchData from '../../utils/fetch-data';
@@ -20,30 +21,42 @@ import fetchData from '../../utils/fetch-data';
 import UploadLogo from '../../media/upload_logo.png';
 
 import { Switch, Route } from 'react-router-dom';
+import { RiLoader5Fill } from "react-icons/ri";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       recipes: [],
+      recipeTotal: null,
+      searchedRecipes: [],
+
       cuisineTypes: [],
       mealTypes: [],
       cookingStyles: [],
+      units: [],
 
       currentRecipe: {},
     
       cuisine: 'all',
-      isFetching: false
+      isFetching: false,
+      isEdit: false,
+      isDuplicate: false,
     };
 
-    this.setCurrentRecipe = this.setCurrentRecipe.bind(this);
-    this.setRandomRecipe = this.setRandomRecipe.bind(this);
+    this.getFullRecipe = this.getFullRecipe.bind(this);
+    this.getAllRecipes = this.getAllRecipes.bind(this);
+    this.searchRecipes = this.searchRecipes.bind(this);
 
     this.changeAll = this.changeAll.bind(this);
     this.changeCuisine = this.changeCuisine.bind(this);
+
+    this.isEditMode = this.isEditMode.bind(this);
+    this.isDuplicateMode = this.isDuplicateMode.bind(this);
+    this.resetModes = this.resetModes.bind(this);
   }
 
-  // function for requesting full info for one recipe
+  // requesting full info for one recipe
   getFullRecipe(recipeId) {
     fetchData.getRecipe(recipeId).then(recipe => {
 
@@ -59,11 +72,11 @@ class App extends React.Component {
       const newCuisineList = [];
       
       cuisineList.map(number => {
-        this.state.cuisineTypes.map(cuisineType => {
+        return this.state.cuisineTypes.map(cuisineType => {
           if (cuisineType.id === number) {
-            newCuisineList.push(cuisineType.type)
+            return newCuisineList.push(cuisineType.type)
           } else {
-            return;
+            return null;
           }
         })
       })
@@ -78,11 +91,11 @@ class App extends React.Component {
       const newMealList = [];
       
       mealList.map(number => {
-        this.state.mealTypes.map(mealType => {
+        return this.state.mealTypes.map(mealType => {
           if (mealType.id === number) {
-            newMealList.push(mealType.type)
+            return newMealList.push(mealType.type)
           } else {
-            return;
+            return null;
           }
         })
       })
@@ -97,11 +110,11 @@ class App extends React.Component {
       const newStyleList = [];
       
       styleList.map(number => {
-        this.state.cookingStyles.map(cookingStyle => {
+        return this.state.cookingStyles.map(cookingStyle => {
           if (cookingStyle.id === number) {
-            newStyleList.push(cookingStyle.type)
+            return newStyleList.push(cookingStyle.type)
           } else {
-            return;
+            return null;
           }
         })
       })
@@ -109,115 +122,243 @@ class App extends React.Component {
       delete recipe.cooking_style;
       recipe.cookingStyle = newStyleList;
 
+      // changing ingredients to an array of objects
+      let ingredientData = recipe.ingredients.split(',');
+      const ingredientArray = [];
+      ingredientData = ingredientData.map(string => {
+        const array = string.split('-');
+        const object = {
+          amount: Number(array[0]),
+          unit: array[1],
+          ingredient: array[2]
+        }
+        ingredientArray.push(object)
+      })
+
+      recipe.ingredients = ingredientArray;
+
+      // changing instructions to an array
+      recipe.instructions = recipe.instructions.split('&');
+
       // setting state for current recipe
       this.setState({currentRecipe: recipe})
     })
   }
 
-
-
-  // initial requesting of data when app is loaded
-  componentDidMount() {
-
-    // requesting cuisine types & setting state
-    fetchData.getAllCuisineTypes().then(response => {
-      this.setState({cuisineTypes: response.cuisineTypes})
-    })
-
-    // requesting meal types & setting state
-    fetchData.getAllMealTypes().then(response => {
-      this.setState({mealTypes: response.mealTypes})
-    })
-
-    // requesting cooking styles & setting state
-    fetchData.getAllCookingStyles().then(response => {
-      this.setState({cookingStyles: response.cookingStyles})
-    })
-
-    // requesting all recipes
-    fetchData.getAllRecipes().then(allRecipes => {
+  // requesting all recipes
+  getAllRecipes() {
+    
+    fetchData.getAllRecipes('').then(allRecipes => {
 
       // setting default image if there is no image uploaded
       allRecipes.map(recipe => {
         if (recipe.image === '') {
-          recipe.image = UploadLogo;
+          return recipe.image = UploadLogo;
+        } else {
+          return null;
         }
       })
 
-      // changing cuisine types to array
-
+      // converting requested data to format needed at frontend
       allRecipes.map(recipe => {
-        let array = recipe.cuisineType.split(',');
-        array = array.map(string => Number(string));
-        
-        const newArray = [];
-        
-        array.map(number => {
-          this.state.cuisineTypes.map(cuisineType => {
+
+        // changing cuisine types to array
+        let cuisineData = recipe.cuisineType.split(',');
+        cuisineData = cuisineData.map(string => Number(string));
+        const cuisineArray = [];
+        cuisineData.map(number => {
+          return this.state.cuisineTypes.map(cuisineType => {
             if (cuisineType.id === number) {
-              newArray.push(cuisineType.type)
+              return cuisineArray.push(cuisineType.type)
             } else {
-              return;
+              return null;
             }
           })
         })
 
-        recipe.cuisineType = newArray;
-      })
+        recipe.cuisineType = cuisineArray;
 
-      // changing meal types to array
-
-      allRecipes.map(recipe => {
-        let array = recipe.mealType.split(',');
-        array = array.map(string => Number(string));
-        
-        const newArray = [];
-        
-        array.map(number => {
-          this.state.mealTypes.map(mealType => {
+        // changing meal types to array
+      
+        let mealData = recipe.mealType.split(',');
+        mealData = mealData.map(string => Number(string));
+        const mealArray = [];
+        mealData.map(number => {
+          return this.state.mealTypes.map(mealType => {
             if (mealType.id === number) {
-              newArray.push(mealType.type)
+              return mealArray.push(mealType.type)
             } else {
-              return;
+              return null;
             }
           })
         })
 
-        recipe.mealType = newArray;
-      })
+       recipe.mealType = mealArray;
 
-      // changing cooking styles to array
-
-      allRecipes.map(recipe => {
-        let array = recipe.cookingStyle.split(',');
-        array = array.map(string => Number(string));
-        
-        const newArray = [];
-        
-        array.map(number => {
-          this.state.cookingStyles.map(cookingStyle => {
+       // changing cooking styles to array
+        let styleData = recipe.cookingStyle.split(',');
+        styleData = styleData.map(string => Number(string));
+        const styleArray = [];
+        styleData.map(number => {
+          return this.state.cookingStyles.map(cookingStyle => {
             if (cookingStyle.id === number) {
-              newArray.push(cookingStyle.type)
+              return styleArray.push(cookingStyle.type)
             } else {
-              return;
+              return null;
             }
           })
         })
 
-        recipe.cookingStyle = newArray;
+        recipe.cookingStyle = styleArray;
+
+        // changing ingredients to an array of objects
+        let ingredientData = recipe.ingredients.split(',');
+        const ingredientArray = [];
+        ingredientData = ingredientData.map(string => {
+          const array = string.split('-');
+          const object = {
+            amount: Number(array[0]),
+            unit: array[1],
+            ingredient: array[2]
+          }
+          ingredientArray.push(object)
+        })
+
+        recipe.ingredients = ingredientArray;
+
+        // changing instructions to an array
+        recipe.instructions = recipe.instructions.split('&');
+
       })
       
       // setting recipes state
       this.setState({recipes: allRecipes})
     })
-
-    // setting random current recipe for "surprise me!" page
-    const numberOfRecipes = this.state.recipes.length;
-    const randomRecipeId = Number(Math.floor((Math.random() * numberOfRecipes) + 1));
-    this.getFullRecipe(randomRecipeId);
   }
 
-  
+  // searching recipes
+  searchRecipes(searchObject) {
+    console.log("searchObject", searchObject);
+    this.setState({isFetching: true})
+    fetchData.getAllRecipes(searchObject).then(searchedRecipes => {
+
+      // setting default image if there is no image uploaded
+      searchedRecipes.map(recipe => {
+        if (recipe.image === '') {
+          return recipe.image = UploadLogo;
+        } else {
+          return null;
+        }
+      })
+
+      // converting requested data to format needed at frontend
+      searchedRecipes.map(recipe => {
+
+        // changing cuisine types to array
+        let cuisineData = recipe.cuisineType.split(',');
+        cuisineData = cuisineData.map(string => Number(string));
+        const cuisineArray = [];
+        cuisineData.map(number => {
+          return this.state.cuisineTypes.map(cuisineType => {
+            if (cuisineType.id === number) {
+              return cuisineArray.push(cuisineType.type)
+            } else {
+              return null;
+            }
+          })
+        })
+
+        recipe.cuisineType = cuisineArray;
+
+        // changing meal types to array
+      
+        let mealData = recipe.mealType.split(',');
+        mealData = mealData.map(string => Number(string));
+        const mealArray = [];
+        mealData.map(number => {
+          return this.state.mealTypes.map(mealType => {
+            if (mealType.id === number) {
+              return mealArray.push(mealType.type)
+            } else {
+              return null;
+            }
+          })
+        })
+
+       recipe.mealType = mealArray;
+
+       // changing cooking styles to array
+        let styleData = recipe.cookingStyle.split(',');
+        styleData = styleData.map(string => Number(string));
+        const styleArray = [];
+        styleData.map(number => {
+          return this.state.cookingStyles.map(cookingStyle => {
+            if (cookingStyle.id === number) {
+              return styleArray.push(cookingStyle.type)
+            } else {
+              return null;
+            }
+          })
+        })
+
+        recipe.cookingStyle = styleArray;
+
+        // changing ingredients to an array of objects
+        let ingredientData = recipe.ingredients.split(',');
+        const ingredientArray = [];
+        ingredientData = ingredientData.map(string => {
+          const array = string.split('-');
+          const object = {
+            amount: Number(array[0]),
+            unit: array[1],
+            ingredient: array[2]
+          }
+          ingredientArray.push(object)
+        })
+
+        recipe.ingredients = ingredientArray;
+
+        // changing instructions to an array
+        recipe.instructions = recipe.instructions.split('&');
+
+      })
+
+      console.log(searchedRecipes)
+      
+      // setting recipes state
+      this.setState({
+        searchedRecipes: searchedRecipes,
+        cuisine: 'all'
+      })
+    }).then(
+      this.setState({isFetching: false})
+    )
+  }
+
+  // initial requesting of data when app is loaded
+  async componentDidMount() {
+    this.setState({ isFetching: true })
+    const { cuisineTypes } = await fetchData.getAllCuisineTypes()
+    const { mealTypes } = await fetchData.getAllMealTypes()
+    const { cookingStyles } = await fetchData.getAllCookingStyles()
+    const { units } = await fetchData.getAllUnits()
+    const recipeTotal = await fetchData.getRecipeTotal()
+
+    this.setState({
+      cuisineTypes,
+      mealTypes,
+      cookingStyles,
+      units,
+      recipeTotal,
+      isFetching: false,
+    })
+
+  }
+
+  // set state of current recipe
+  setCurrentRecipe(recipe) {
+    this.setState({currentRecipe: recipe})
+  }
 
   // updating state of cuisine so display of "all recipe" will change according to cuisine clicked
   changeAll() {
@@ -232,39 +373,33 @@ class App extends React.Component {
     })
   }
 
-  changeFilipino() {
+  // change state when in edit mode
+  isEditMode() {
+    console.log('edit!!')
+    this.setState({isEdit: true})
+  }
+
+  // change state when in duplicate mode
+  isDuplicateMode() {
+    this.setState({isDuplicate: true})
+  }
+
+  // reset states after editing/adding
+  resetModes() {
     this.setState({
-      cuisine: 'filipino'
+      isEdit: false,
+      isDuplicate: false
     })
-  }
-
-  changeThai() {
-    this.setState({
-      cuisine: 'thai'
-    })
-  }
-
-  changeWestern() {
-    this.setState({
-      cuisine: 'western'
-    })
-  }
-
-
-  // setting random current recipe for "surprise me!" page when clicked
-  setRandomRecipe() {
-    const numberOfRecipes = this.state.recipes.length;
-    const randomRecipeId = Number(Math.floor((Math.random() * numberOfRecipes) + 1));
-    this.getFullRecipe(randomRecipeId);
-  }
-
-  // updating state of current recipe so recipe page will show what is clicked
-  setCurrentRecipe(event) {
-    const id = Number(event.target.attributes.recipeId.value);
-    this.getFullRecipe(id);
   }
 
   render() {
+    if (this.state.isFetching) {
+      return (
+        <div className="loading-screen">
+          <RiLoader5Fill />
+        </div>
+      )
+    }
     return (
       <div className="App">
         <Topbar />
@@ -275,37 +410,78 @@ class App extends React.Component {
           cuisineTypes={this.state.cuisineTypes}
         />
 
-        <Searchbar />
+        <Searchbar 
+          searchRecipes={this.searchRecipes}
+        />
 
         <Switch>
 
           <Route path='/' exact>
-            <Mainpage randomRecipe={this.setRandomRecipe} />
+            <Mainpage 
+              recipes={this.state.recipes}
+              recipeTotal={this.state.recipeTotal}
+              searchRecipes={this.searchRecipes}
+            />
           </Route>
 
           <Route path='/all-recipes'>
-            <AllRecipes recipes={this.state.recipes} setCurrentRecipe={this.setCurrentRecipe} cuisine={this.state.cuisine} />
+            <AllRecipes
+              cuisine={this.state.cuisine} 
+              recipes={this.state.recipes}
+              getAllRecipes={this.getAllRecipes}
+            />
           </Route>
 
-          <Route path='/recipe-page'>
-            <RecipePage recipe={this.state.currentRecipe} setCurrentRecipe={this.setCurrentRecipe} />
+          <Route path='/recipe-page/:recipeId'>
+            <RecipePage
+              currentRecipe={this.state.currentRecipe}
+              getFullRecipe={this.getFullRecipe}
+              isEditMode={this.isEditMode}
+              isDuplicateMode={this.isDuplicateMode}
+            />
           </Route>
 
           <Route path='/search-by-recipe'>
-            <SearchByRecipe />
+            <SearchByRecipe 
+              cuisineTypes={this.state.cuisineTypes}
+              mealTypes={this.state.mealTypes}
+              cookingStyles={this.state.cookingStyles}
+              searchRecipes={this.searchRecipes}
+            />
           </Route>
 
           <Route path='/search-by-ingre'>
-            <SearchByIngre />
+            <SearchByIngre 
+              searchRecipes={this.searchRecipes}
+            />
           </Route>
 
-          <Route path='/add-recipe'>
-            <AddRecipe />
+          <Route path='/add-edit-recipe'>
+            <AddRecipe 
+              currentRecipe={this.state.currentRecipe}
+              isEdit={this.state.isEdit}
+              isDuplicate={this.state.isDuplicate}
+              cuisineTypes={this.state.cuisineTypes}
+              mealTypes={this.state.mealTypes}
+              cookingStyles={this.state.cookingStyles}
+              units={this.state.units}
+              getAllRecipes={this.getAllRecipes}
+              resetModes={this.resetModes}
+            />
+          </Route>
+
+          <Route path='/search-results'>
+            <SearchResults 
+              cuisine={this.state.cuisine} 
+              searchedRecipes={this.state.searchedRecipes}
+              isFetching={this.state.isFetching}
+            />
           </Route>
 
         </Switch>
       </div>
     )
+    
   }
 }
 

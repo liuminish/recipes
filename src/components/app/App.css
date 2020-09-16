@@ -10,3 +10,8 @@ body {
   text-align: center;
 }
 
+.loading-screen {
+  margin: auto;
+  color: white;
+  font-size: 50px
+}

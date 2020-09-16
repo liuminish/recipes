@@ -13,8 +13,14 @@ a.main-logo {
     cursor: pointer;
 }
 
+.link-color-unchanged {
+    color: white;
+    opacity: 0.6;
+}
+
 a.main-logo:hover, .link-color-unchanged:hover{
     color: white;
+    opacity: 1;
     text-decoration: none;
     cursor: pointer;
 }

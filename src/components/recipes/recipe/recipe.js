@@ -1,5 +1,5 @@
 import React from 'react';
-import './recipe.css';
+import './Recipe.css';
 
 import { Link } from 'react-router-dom';
 import { BiTime } from "react-icons/bi";
@@ -10,8 +10,8 @@ class Recipe extends React.Component {
 
         return (
             <div className="recipe-container">
-                <div className="image-container" onClick={this.props.setCurrentRecipe}>
-                    <Link to='/recipe-page'><img src={image} recipeId={id} alt={name} /></Link>
+                <div className="image-container">
+                    <Link to={`recipe-page/${id}`}><img src={image} recipeId={id} alt={name} /></Link>
                 </div>
                 <div className="recipe-quick-info">
                     <div>{name}</div>

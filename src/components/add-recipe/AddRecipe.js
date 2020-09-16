@@ -1,32 +1,36 @@
 import React from 'react';
-import './add-recipe.css';
+import './AddRecipe.css';
 
-import Checkbox from '../utils/checkbox';
-import { ItemizedListExtended, ItemizedListNoDelete } from '../utils/itemized-list';
+import Checkbox from '../../utils/checkbox';
+import { ItemizedListExtended, ItemizedListNoDelete } from '../../utils/itemized-list';
+import fetchData from '../../utils/fetch-data';
 
 import { RiAddLine, RiDeleteBinLine, RiArrowUpCircleLine, RiArrowDownCircleLine, RiEdit2Line } from "react-icons/ri";
+import { Redirect } from 'react-router-dom';
 
 import UploadLogo from '../../media/upload_logo.png';
 
-// arrays and objects for checkbox monitoring
-const mealOptions = ['Breakfast', 'Desserts', 'Dinner', 'Snacks'];
-const cuisineOptions = ['Chinese', 'Filipino', 'Thai', 'Western'];
-const styleOptions = ['Easy', 'InstantPot', 'Panfry', 'Slow-cook', 'Vegetarian'];
+// function for manipulation of cuisine, meal and cooking type states into arrays
+const reduceArray = (array) => {
+    const newArray = array.map(object => {
+        return object.type
+    })
+    
+    const newerArray = newArray.reduce(
+        (array, option) => ({...array,[option]: false}),{}
+    );
 
-const mealOptionsReduced = mealOptions.reduce(
-    (mealOptions, option) => ({...mealOptions,[option]: false}),{}
-);
+    return newerArray
+}
 
-const cuisineOptionsReduced = cuisineOptions.reduce(
-    (cuisineOptions, option) => ({...cuisineOptions,[option]: false}),{}
-);
+// function to change an array of objects to an array of strings
+const changeToArray = (arrayOfObjects) => {
+    const newArray = arrayOfObjects.map(object => {
+        return object.type
+    })
 
-const styleOptionsReduced = styleOptions.reduce(
-    (styleOptions, option) => ({...styleOptions,[option]: false}),{}
-);
-
-// array for cooking units of measurement
-const unitsMeasure = ['select', 'teaspoon', 'tablespoon', 'cup', 'millilitre', 'litre', 'gram', 'kilogram', 'slice', 'piece'];
+    return newArray
+}
 
 class AddRecipe extends React.Component {
     constructor(props) {
@@ -38,10 +42,15 @@ class AddRecipe extends React.Component {
             notes: '',
             image: UploadLogo,
 
+            // below state handles redirect state of page
+            redirect: false,
+
             // below states relate to options on form
-            mealOptions: mealOptionsReduced,
-            cuisineOptions: cuisineOptionsReduced,
-            styleOptions: styleOptionsReduced,
+            mealTypes: reduceArray(this.props.mealTypes),
+            cuisineTypes: reduceArray(this.props.cuisineTypes),
+            cookingStyles: reduceArray(this.props.cookingStyles),
+            
+            units: changeToArray(this.props.units),
 
             // below states handle ingredients
             currentIngreAmount: '',
@@ -53,7 +62,10 @@ class AddRecipe extends React.Component {
             //below states handle instructions
             instructionCount: 1,
             currentInstruct: '',
-            instructList: []
+            instructList: [],
+
+            // below state stores current recipe to post
+            recipeToPost: {}
 
         }
 
@@ -82,11 +94,49 @@ class AddRecipe extends React.Component {
         this.handleCuisineCheckboxChange = this.handleCuisineCheckboxChange.bind(this);
         this.handleStyleCheckboxChange = this.handleStyleCheckboxChange.bind(this);
 
-        this.saveRecipe = this.saveRecipe.bind(this);
-        this.clearRecipe = this.clearRecipe.bind(this);
+        this.convertRecipe = this.convertRecipe.bind(this);
+        this.addRecipe = this.addRecipe.bind(this);
+        this.updateRecipe = this.updateRecipe.bind(this);
+
     }
 
-    // function to handle image upload
+    // function to set input fields to current recipe (for duplicate/edit recipe buttons)
+    componentDidMount() {
+        if (this.props.isEdit || this.props.isDuplicate) {
+
+            let updatedMealTypes = {...this.state.mealTypes};
+            this.props.currentRecipe.mealType.map(type => {
+                updatedMealTypes[type] = true
+            })
+
+            let updatedCuisineTypes = {...this.state.cuisineTypes};
+            this.props.currentRecipe.cuisineType.map(type => {
+                updatedCuisineTypes[type] = true
+            })
+
+            let updatedCookingStyles = {...this.state.cookingStyles};
+            this.props.currentRecipe.cookingStyle.map(type => {
+                updatedCookingStyles[type] = true
+            })
+
+            this.setState({
+                recipeName: this.props.currentRecipe.name,
+                recipeTime: this.props.currentRecipe.time,
+                recipeServings: this.props.currentRecipe.servings,
+                notes: this.props.currentRecipe.notes,
+                image: this.props.currentRecipe.image === ''? UploadLogo : this.props.currentRecipe.image,
+                mealTypes: updatedMealTypes,
+                cuisineTypes: updatedCuisineTypes,
+                cookingStyles: updatedCookingStyles,
+                addedIngreList: this.props.currentRecipe.ingredients,
+                instructionCount: this.props.currentRecipe.instructions.length + 1,
+                instructList: this.props.currentRecipe.instructions
+            })
+        }
+
+    }
+    
+    // function to control image upload
     onImageChange(event){
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
@@ -97,7 +147,7 @@ class AddRecipe extends React.Component {
         
     }
 
-    // functions to handle change in name, time, servings, notes
+    // functions to control change in name, time, servings, notes
     changeRecipeName(e) {
         this.setState({
             recipeName: e.target.value
@@ -122,47 +172,47 @@ class AddRecipe extends React.Component {
         })
     }
 
-    // functions to handle checkbox changes
+    // functions to control checkbox changes
     handleMealCheckboxChange(e) {
         const selected = e.target.name;
-        let newMealOptions = {...this.state.mealOptions};
+        let newmealTypes = {...this.state.mealTypes};
 
-        if (this.state.mealOptions[selected]) {
-            newMealOptions[selected] = false
-            this.setState({mealOptions: newMealOptions})
+        if (this.state.mealTypes[selected]) {
+            newmealTypes[selected] = false
+            this.setState({mealTypes: newmealTypes})
         } else {
-            newMealOptions[selected] = true
-            this.setState({mealOptions: newMealOptions})
+            newmealTypes[selected] = true
+            this.setState({mealTypes: newmealTypes})
         }
     }
 
     handleCuisineCheckboxChange(e) {
         const selected = e.target.name;
-        let newCuisineOptions = {...this.state.cuisineOptions};
+        let newcuisineTypes = {...this.state.cuisineTypes};
 
-        if (this.state.cuisineOptions[selected]) {
-            newCuisineOptions[selected] = false
-            this.setState({cuisineOptions: newCuisineOptions})
+        if (this.state.cuisineTypes[selected]) {
+            newcuisineTypes[selected] = false
+            this.setState({cuisineTypes: newcuisineTypes})
         } else {
-            newCuisineOptions[selected] = true
-            this.setState({cuisineOptions: newCuisineOptions})
+            newcuisineTypes[selected] = true
+            this.setState({cuisineTypes: newcuisineTypes})
         }
     }
 
     handleStyleCheckboxChange(e) {
         const selected = e.target.name;
-        let newStyleOptions = {...this.state.styleOptions};
+        let newcookingStyles = {...this.state.cookingStyles};
 
-        if (this.state.styleOptions[selected]) {
-            newStyleOptions[selected] = false
-            this.setState({styleOptions: newStyleOptions})
+        if (this.state.cookingStyles[selected]) {
+            newcookingStyles[selected] = false
+            this.setState({cookingStyles: newcookingStyles})
         } else {
-            newStyleOptions[selected] = true
-            this.setState({styleOptions: newStyleOptions})
+            newcookingStyles[selected] = true
+            this.setState({cookingStyles: newcookingStyles})
         }
     }
 
-    // functions to handle ingredients
+    // functions to control ingredients
     changeIngreAmount(e) {
         this.setState({
             currentIngreAmount: e.target.value
@@ -183,10 +233,10 @@ class AddRecipe extends React.Component {
 
     addIngre() {
         
-        if (this.state.currentIngreAmount === '' || this.state.currentIngreUnit === '' || this.state.currentIngre === '' ) {
+        if (this.state.currentIngreAmount === '' || this.state.currentIngre === '' ) {
             return;
         } else if (this.state.currentIngreAmount < 1) {
-            alert('Please input valid ingredient amount.');
+            alert('Please input valid ingredient.');
             return;
         }
 
@@ -228,8 +278,7 @@ class AddRecipe extends React.Component {
         })
     }
 
-    // functions to handle instructions
-
+    // functions to control instructions
     changeInstruct(e) {
         this.setState({
             currentInstruct: e.target.value
@@ -276,7 +325,7 @@ class AddRecipe extends React.Component {
 
         this.setState({
             currentInstruct: instruction,
-            instructionCount: index
+            instructionCount: index,
         })
     }
 
@@ -295,6 +344,10 @@ class AddRecipe extends React.Component {
     }
 
     moveInstructUp(instruction) {
+
+        if (this.state.instructionCount <= this.state.instructList.length) {
+            return;
+        }
         
         const clonedArray = [...this.state.instructList];
         const index = clonedArray.findIndex(instruct => instruct === instruction);
@@ -316,6 +369,10 @@ class AddRecipe extends React.Component {
     }
 
     moveInstructDown(instruction) {
+
+        if (this.state.instructionCount <= this.state.instructList.length) {
+            return;
+        }
         
         const clonedArray = [...this.state.instructList];
         const index = clonedArray.findIndex(instruct => instruct === instruction);
@@ -336,109 +393,133 @@ class AddRecipe extends React.Component {
         })
     }
 
-    // function to handle save recipe & clear recipe
-
-    saveRecipe() {
+    // function to convert data to database format and set state of recipe to post
+    convertRecipe() {
         const {
             recipeName,
             recipeTime,
             recipeServings,
             notes,
             image,
-            mealOptions,
-            cuisineOptions,
-            styleOptions,
+            mealTypes,
+            cuisineTypes,
+            cookingStyles,
             addedIngreList,
             instructList
         } = this.state;
+        
+        // converting meal, cuisine and style types to database format
+        const chosenMealTypes = Object.keys(mealTypes).filter(meal => mealTypes[meal]);
+        const chosenCuisineTypes = Object.keys(cuisineTypes).filter(cuisine => cuisineTypes[cuisine]);
+        const chosenStyleTypes = Object.keys(cookingStyles).filter(style => cookingStyles[style]);
 
-        const chosenMealTypes = Object.keys(mealOptions).filter(meal => mealOptions[meal]);
-        const chosenCuisineTypes = Object.keys(cuisineOptions).filter(cuisine => cuisineOptions[cuisine]);
-        const chosenStyleTypes = Object.keys(styleOptions).filter(style => styleOptions[style]);
+        const convertedCuisineTypes = [];
+        chosenCuisineTypes.map(type => {
+            this.props.cuisineTypes.map(object => {
+                if (object.type === type) {
+                    return convertedCuisineTypes.push(object.id)
+                } else {
+                    return;
+                }
+            })
+        })
 
-        // checking for blank name input
+        const convertedMealTypes = [];
+        chosenMealTypes.map(type => {
+            this.props.mealTypes.map(object => {
+                if (object.type === type) {
+                    return convertedMealTypes.push(object.id)
+                } else {
+                    return;
+                }
+            })
+        })
+
+        const convertedStyleTypes = [];
+        chosenStyleTypes.map(type => {
+            this.props.cookingStyles.map(object => {
+                if (object.type === type) {
+                    return convertedStyleTypes.push(object.id)
+                } else {
+                    return;
+                }
+            })
+        })
+
+        // checking for invalid inputs
         if (recipeName === '') {
             alert('Please ensure you have filled in a name for the recipe');
             return;
-        } 
-        
-        // checking for invalid time needed input
-        else if (isNaN(recipeTime) || recipeTime <= 0 || recipeTime === '') {
+        } else if (isNaN(recipeTime) || recipeTime <= 0 || recipeTime === '') {
             alert('Please input valid "Time needed".');
             return;
-        }
-
-        // checking for invalid servings input
-        else if (isNaN(recipeServings) || recipeServings <= 0) {
+        } else if (isNaN(recipeServings) || recipeServings <= 0) {
             alert('Please input valid "Servings".');
             return;
-        }
-
-        // checking for meal type selection
-        else if (chosenMealTypes.length <= 0) {
+        } else if (chosenMealTypes.length <= 0) {
             alert('Please choose at least one meal type.');
             return;
-        }
-
-        // checking for cuisine type selection
-        else if (chosenCuisineTypes.length <= 0) {
+        } else if (chosenCuisineTypes.length <= 0) {
             alert('Please choose at least one cuisine type.');
             return;
-        }
-
-        // checking for style type selection
-        else if (chosenStyleTypes.length <= 0) {
+        } else if (chosenStyleTypes.length <= 0) {
             alert('Please choose at least one cooking style.');
             return;
-        }
-        
-        // checking for ingredients
-        else if (addedIngreList.length <= 0) {
+        } else if (addedIngreList.length <= 0) {
             alert('Please add at least one ingredient.');
             return;
-        }
-
-        // checking for instructions
-        else if (instructList.length <= 0) {
+        } else if (instructList.length <= 0) {
             alert('Please add at least one instruction.');
             return;
         }
 
-        // to be replaced with request
-        console.log('saving recipe...')
-        console.log('Name of recipe: ' + recipeName)
-        console.log('Image of recipe :' + image)
-        console.log('Meal types are: ' + chosenMealTypes)
-        console.log('Cuisine types are: ' + chosenCuisineTypes)
-        console.log('Cooking styles are: ' + chosenStyleTypes)
-        console.log('Time needed: ' + recipeTime + ' minutes')
-        console.log('Serving suggestion: ' + recipeServings)
-        console.log('Ingredients needed: ' + addedIngreList)
-        console.log('Instructions: ' + instructList)
-        console.log('Notes: ' + notes)
-
-        // clearing form
-        this.setState({
-            recipeName: '',
-            recipeTime: '',
-            recipeServings: '',
-            notes: '',
-            image: UploadLogo,
-            mealOptions: mealOptionsReduced,
-            cuisineOptions: cuisineOptionsReduced,
-            styleOptions: styleOptionsReduced,
-            currentIngreAmount: '',
-            currentIngreUnit: '',
-            currentIngre: '',
-            addedIngreList: [],
-            instructionCount: 1,
-            currentInstruct: '',
-            instructList: []
+        // converting ingredients and instructions to database format
+        const ingreArray = addedIngreList.map(object => {
+            return `${object.amount}-${object.unit}-${object.ingredient}`
         })
 
-        alert('Recipe saved.')
+        const convertedIngreArray = ingreArray.join();
+
+        const convertedInstructList = instructList.join('&');
+
+        // if image is null, change to blank string
+        if (!image) {
+            this.setState({image: ''})
+        }
+
+        // sending POST request to server
+        const recipeToPost = {
+            id: this.props.isEdit ? this.props.currentRecipe.id : null,
+            name: recipeName,
+            image: image,
+            time: recipeTime,
+            servings: recipeServings,
+            cuisineTypes: convertedCuisineTypes.toString(),
+            mealTypes: convertedMealTypes.toString(),
+            cookingStyles: convertedStyleTypes.toString(),
+            ingredients: convertedIngreArray,
+            instructions: convertedInstructList,
+            notes: notes
+        }
+
+        this.setState({recipeToPost: recipeToPost});
+        
     }
 
+    // function to add recipe
+    async addRecipe() {
+        await this.convertRecipe();
+        if (this.state.recipeToPost !== {}) {
+            console.log(this.state.recipeToPost)
+            await fetchData.createRecipe(this.state.recipeToPost);
+            this.setState({redirect: true})
+            this.props.resetModes();
+            alert('Recipe created.')
+        }
+        
+    }
+
+    // function to clear recipe
     clearRecipe() {
         this.setState({
             recipeName: '',
@@ -446,9 +527,9 @@ class AddRecipe extends React.Component {
             recipeServings: '',
             notes: '',
             image: UploadLogo,
-            mealOptions: mealOptionsReduced,
-            cuisineOptions: cuisineOptionsReduced,
-            styleOptions: styleOptionsReduced,
+            mealTypes: reduceArray(this.props.mealTypes),
+            cuisineTypes: reduceArray(this.props.cuisineTypes),
+            cookingStyles: reduceArray(this.props.cookingStyles),
             currentIngreAmount: '',
             currentIngreUnit: '',
             currentIngre: '',
@@ -459,11 +540,44 @@ class AddRecipe extends React.Component {
         })
     }
 
+    // function for updating of recipe
+    async updateRecipe() {
+        await this.convertRecipe();
+        console.log(this.state.recipeToPost)
+        if (this.state.recipeToPost !== {}) {
+            await fetchData.updateRecipe(this.state.recipeToPost);
+            this.setState({redirect: true})
+            this.props.resetModes();
+            alert('Recipe updated.')
+        }
+    }
+
+    componentWillUnmount() {
+        this.props.resetModes();
+    }
+
     render() {
+        let displayHeader = 'Add ';
+        let saveButton = 'Save Recipe';
+        let clearButton = 'Clear Recipe';
+        let saveOnclick = this.addRecipe;
+        let clearOnclick = this.clearRecipe;
+
+        if (this.props.isEdit) {
+            displayHeader = 'Edit ';
+            saveButton = 'Update Recipe';
+            clearButton = 'Cancel Edit';
+            saveOnclick = this.updateRecipe;
+            clearOnclick = null;
+
+        } else if (this.state.redirect) {
+            return <Redirect to={`/all-recipes`} />
+        }
+
         return (
             <div className="add-recipe-main-container">
 
-                <h1>Add/Edit Recipe</h1>
+                <h1>{displayHeader}Recipe</h1>
 
                 {/* renders name field */}
                 <div className="add-recipe-secondary-container">
@@ -495,26 +609,26 @@ class AddRecipe extends React.Component {
                     <div className="add-recipe-individual-row">
                         <div className="add-recipe-main-checkbox-container">
                             <div className="add-recipe-checkbox-container">
-                                <p>Meal Type</p>
+                                <p>Cuisine Type</p>
                                 <p className="add-recipe-checkbox">
-                                    {mealOptions.map(option => {
-                                    return <Checkbox label={option} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealOptions[option]} key={option} />
+                                    {this.props.cuisineTypes.map(option => {
+                                    return <Checkbox className="add-recipe-checkbox" label={option.type} key={option.type} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option.type]} />
                                     })}
                                 </p>
                             </div>
                             <div className="add-recipe-checkbox-container">
-                                <p>Cuisine Type</p>
+                                <p>Meal Type</p>
                                 <p className="add-recipe-checkbox">
-                                    {cuisineOptions.map(option => {
-                                    return <Checkbox className="add-recipe-checkbox" label={option} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineOptions[option]} key={option} />
+                                    {this.props.mealTypes.map(option => {
+                                    return <Checkbox label={option.type} key={option.type} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option.type]} />
                                     })}
                                 </p>
                             </div>
                             <div className="add-recipe-checkbox-container">
                                 <p>Cooking Style</p>
                                 <p className="add-recipe-checkbox">
-                                    {styleOptions.map(option => {
-                                    return <Checkbox className="add-recipe-checkbox" label={option} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.styleOptions[option]} key={option} />
+                                    {this.props.cookingStyles.map(option => {
+                                    return <Checkbox className="add-recipe-checkbox" key={option.type} label={option.type} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option.type]} />
                                     })}
                                 </p>
                             </div>
@@ -555,7 +669,7 @@ class AddRecipe extends React.Component {
                             <div className="add-recipe-new-ingre">
                                 <input type="number" value={this.state.currentIngreAmount} onChange={this.changeIngreAmount} />
                                 <select value={this.state.currentIngreUnit} onChange={this.changeIngreUnit}>
-                                    {unitsMeasure.map(unit => {
+                                    {this.state.units.map(unit => {
                                         return <option value={unit} key={unit}>{unit}</option>
                                     })}
                                 </select>
@@ -632,11 +746,11 @@ class AddRecipe extends React.Component {
 
                 {/* renders buttons to save or clear recipe */}
                 <div className="add-recipe-form-button-container">
-                    <div className="add-recipe-form-button" onClick={this.saveRecipe}>
-                        Save Recipe
+                    <div className="add-recipe-form-button" onClick={saveOnclick}>
+                        {saveButton}
                     </div>
-                    <div className="add-recipe-form-button" onClick={this.clearRecipe}>
-                        Clear Recipe
+                    <div className="add-recipe-form-button" onClick={clearOnclick}>
+                        {clearButton}
                     </div>
                 </div>
             </div>

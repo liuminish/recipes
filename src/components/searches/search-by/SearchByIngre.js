@@ -1,17 +1,19 @@
 import React from 'react';
-import './search-by.css';
+import './SearchBy.css';
 
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { RiShoppingBasket2Line } from "react-icons/ri";
 import { BiFoodMenu } from "react-icons/bi";
 
-import { ItemizedList } from '../../utils/itemized-list';
+import { ItemizedList } from '../../../utils/itemized-list';
 
 class SearchByIngre extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            isRedirect: false,
+
             // states which affect include/exclude ingredient list
             includeIngreStatus: false,
             excludeIngreStatus: false,
@@ -132,10 +134,15 @@ class SearchByIngre extends React.Component {
             return;
         }
 
-        // this will be replaced with request to api
-        console.log('search term is ' + this.state.searchValue);
-        console.log('ingredients to include is/are ' + this.state.includeIngre)
-        console.log('ingredients to exclude is/are ' + this.state.excludeIngre)
+        // fetching search results
+        let searchObject = {};
+
+        searchObject.name = this.state.searchValue;
+        searchObject.inclIngre = this.state.includeIngre;
+        searchObject.exclIngre = this.state.excludeIngre;
+        
+        this.props.searchRecipes(searchObject);
+        console.log("searchObject", searchObject);
 
         // clear states
         this.setState({
@@ -143,7 +150,8 @@ class SearchByIngre extends React.Component {
             includeIngre: [],
             excludeIngre: [],
             includeIngreStatus: false,
-            excludeIngreStatus: false
+            excludeIngreStatus: false,
+            isRedirect: true
         })
     }
 
@@ -156,53 +164,58 @@ class SearchByIngre extends React.Component {
         let includeIngreStatus = this.state.includeIngreStatus ? 'ingre-active-include' : 'ingre-inactive';
         let excludeIngreStatus = this.state.excludeIngreStatus ? 'ingre-active-exclude' : 'ingre-inactive';
 
-        return (
-            <div>
-                <h1>Advanced Search</h1>
-
-                {/* the below renders the main search bar */}
-
-                <div className="advanced-search-bar">
-                    <div>
-                        <input className='advanced-search-input' type="text" value={this.state.searchValue} onChange={this.updateSearchValue} />
-                        <div className='search-by'>
-                            <Link to="/search-by-recipe"><div className={searchByRecipe} id="link"><BiFoodMenu />Search by Recipe</div></Link>
-                            <div className={searchByIngre} id="link"><RiShoppingBasket2Line />Search by Ingredients</div>
+        if (this.state.isRedirect) {
+            return <Redirect to={`/search-results`} />
+        } else {
+            return (
+                <div>
+                    <h1>Advanced Search</h1>
+    
+                    {/* the below renders the main search bar */}
+    
+                    <div className="advanced-search-bar">
+                        <div>
+                            <input className='advanced-search-input' type="text" value={this.state.searchValue} onChange={this.updateSearchValue} />
+                            <div className='search-by'>
+                                <Link to="/search-by-recipe"><div className={searchByRecipe} id="link"><BiFoodMenu />Search by Recipe</div></Link>
+                                <div className={searchByIngre} id="link"><RiShoppingBasket2Line />Search by Ingredients</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                {/* the below renders the ingredient filters */}
-
-                <div className="search-by-container">
-                    <div className="ingredients-component">
-                        <h3>Ingredients to Include</h3>
-                        <input className="ingre-input" type="text" value={this.state.includeIngreInput} onChange={this.updateIncludeIngreInput} />
-                        <input type="submit" value="Include" onClick={this.updateIncludeIngre} />
-                        <div className="ingre-input-container">
-                            {this.state.includeIngre.map((ingredient, index) => 
-                                <div className={includeIngreStatus} key={index}>
-                                    <ItemizedList item={ingredient} handleClick={() => this.removeIncludeIngre(ingredient)} />
-                                </div>)}
+    
+                    {/* the below renders the ingredient filters */}
+    
+                    <div className="search-by-container">
+                        <div className="ingredients-component">
+                            <h3>Ingredients to Include</h3>
+                            <input className="ingre-input" type="text" value={this.state.includeIngreInput} onChange={this.updateIncludeIngreInput} />
+                            <input type="submit" value="Include" onClick={this.updateIncludeIngre} />
+                            <div className="ingre-input-container">
+                                {this.state.includeIngre.map((ingredient, index) => 
+                                    <div className={includeIngreStatus} key={index}>
+                                        <ItemizedList item={ingredient} handleClick={() => this.removeIncludeIngre(ingredient)} />
+                                    </div>)}
+                            </div>
+                        </div>
+                        <div className="ingredients-component">
+                            <h3>Ingredients to Exclude</h3>
+                            <input className="ingre-input" type="text" value={this.state.excludeIngreInput} onChange={this.updateExcludeIngreInput} />
+                            <input type="submit" value="Exclude" onClick={this.updateExcludeIngre} />
+                            <div className="ingre-input-container">
+                                {this.state.excludeIngre.map((ingredient, index) => 
+                                    <div className={excludeIngreStatus} key={index}>
+                                        <ItemizedList item={ingredient} handleClick={() => this.removeExcludeIngre(ingredient)} />
+                                    </div>)}
+                            </div>
                         </div>
                     </div>
-                    <div className="ingredients-component">
-                        <h3>Ingredients to Exclude</h3>
-                        <input className="ingre-input" type="text" value={this.state.excludeIngreInput} onChange={this.updateExcludeIngreInput} />
-                        <input type="submit" value="Exclude" onClick={this.updateExcludeIngre} />
-                        <div className="ingre-input-container">
-                            {this.state.excludeIngre.map((ingredient, index) => 
-                                <div className={excludeIngreStatus} key={index}>
-                                    <ItemizedList item={ingredient} handleClick={() => this.removeExcludeIngre(ingredient)} />
-                                </div>)}
-                        </div>
+                    <div className="advanced-search-button" onClick={this.handleFormSubmit}>
+                        Advanced Search
                     </div>
                 </div>
-                <div className="advanced-search-button" onClick={this.handleFormSubmit}>
-                    Advanced Search
-                </div>
-            </div>
-        )
+            )
+        }
+
     }
 }
 
