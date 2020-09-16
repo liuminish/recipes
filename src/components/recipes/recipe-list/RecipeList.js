@@ -13,19 +13,16 @@ class RecipeList extends React.Component {
         let foundRecipes = [];
 
         if (currentCuisine === 'all') {
-            foundRecipes = this.props.recipes
-        } else {
-            this.props.recipes.map(recipe => {
-                if (recipe.cuisineType.find(cuisine => cuisine === currentCuisine)) {
-                    foundRecipes.push(recipe)
-                }
-            });
+            return foundRecipes = this.props.recipes
         }
 
-        console.log(foundRecipes.length)
-
         if (currentCuisine === 'all' && foundRecipes.length > 0) {
-            console.log('showing all recipes...')
+            foundRecipes = this.props.recipes.filter(recipe => {
+                return recipe.cuisineType.find(cuisine => {
+                     return cuisine === currentCuisine
+                 }) 
+             });
+             
             return (
                 <div className="recipes-container">
                     {foundRecipes.map(recipe => {
@@ -35,13 +32,11 @@ class RecipeList extends React.Component {
                 </div>
             ) 
         } else if (foundRecipes.length <= 0) {
-            console.log('no recipes to show :(')
             return (<div className="no-recipes-found">
                 <p>No recipes found <BiSad /></p>
                 <p>Please add recipes<span>&nbsp;</span><Link to='/add-edit-recipe'>here</Link>!</p>
             </div>)
         } else {
-            console.log('showing special recipes only')
             return (
                 <div className="recipes-container">
                     {foundRecipes.map(recipe => {

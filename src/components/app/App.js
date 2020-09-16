@@ -214,20 +214,20 @@ class App extends React.Component {
         // changing ingredients to an array of objects
         let ingredientData = recipe.ingredients.split(',');
         const ingredientArray = [];
-        ingredientData = ingredientData.map(string => {
+        ingredientData.map(string => {
           const array = string.split('-');
           const object = {
             amount: Number(array[0]),
             unit: array[1],
             ingredient: array[2]
           }
-          ingredientArray.push(object)
+          return ingredientArray.push(object)
         })
 
         recipe.ingredients = ingredientArray;
 
         // changing instructions to an array
-        recipe.instructions = recipe.instructions.split('&');
+        return recipe.instructions = recipe.instructions.split('&');
 
       })
       
@@ -306,20 +306,20 @@ class App extends React.Component {
         // changing ingredients to an array of objects
         let ingredientData = recipe.ingredients.split(',');
         const ingredientArray = [];
-        ingredientData = ingredientData.map(string => {
+        ingredientData.map(string => {
           const array = string.split('-');
           const object = {
             amount: Number(array[0]),
             unit: array[1],
             ingredient: array[2]
           }
-          ingredientArray.push(object)
+          return ingredientArray.push(object)
         })
 
         recipe.ingredients = ingredientArray;
 
         // changing instructions to an array
-        recipe.instructions = recipe.instructions.split('&');
+        return recipe.instructions = recipe.instructions.split('&');
 
       })
 

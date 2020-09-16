@@ -108,44 +108,41 @@ class SearchByRecipe extends React.Component {
 
     // handles form submit
     handleFormSubmit(e) {
-
-        const chosenMealTypes = [];
-        Object.keys(this.state.mealTypes).filter(meal => {
+        const chosenMealTypes = Object
+            .keys(this.state.mealTypes)
+            .filter(meal => {
                 return this.state.mealTypes[meal]
-            }).map(meal => {
-                return this.props.mealTypes.find(type => {
-                    if(type.type === meal) {
-                        return chosenMealTypes.push(type.id)
-                    } else {
-                        return;
-                    }
+            })
+            .map(meal => {
+                const foundMealType = this.props.mealTypes.find(record => {
+                    return record.type === meal
                 })
-        });
 
-        const chosenCuisineTypes = [];
-        Object.keys(this.state.cuisineTypes).filter(cuisine => {
+                return foundMealType.id
+            });
+
+        const chosenCuisineTypes = Object
+            .keys(this.state.cuisineTypes)
+            .filter(cuisine => {
                 return this.state.cuisineTypes[cuisine]
             }).map(cuisine => {
-                return this.props.cuisineTypes.find(type => {
-                    if(type.type === cuisine) {
-                        return chosenCuisineTypes.push(type.id)
-                    } else {
-                        return;
-                    }
+                const foundCuisineType = this.props.cuisineTypes.find(record => {
+                    return record.type === cuisine
                 })
+
+                return foundCuisineType.id
         });
 
-        const chosenStyleTypes = [];
-        Object.keys(this.state.cookingStyles).filter(style => {
+        const chosenStyleTypes = Object
+            .keys(this.state.cookingStyles)
+            .filter(style => {
                 return this.state.cookingStyles[style]
             }).map(style => {
-                return this.props.cookingStyles.find(type => {
-                    if(type.type === style) {
-                        return chosenStyleTypes.push(type.id)
-                    } else {
-                        return;
-                    }
+                const foundCookingStyle = this.props.cookingStyles.find(record => {
+                    return record.type === style
                 })
+
+                return foundCookingStyle.id
         });
 
         // checks if filters are chosen

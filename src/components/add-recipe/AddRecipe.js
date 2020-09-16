@@ -413,37 +413,21 @@ class AddRecipe extends React.Component {
         const chosenCuisineTypes = Object.keys(cuisineTypes).filter(cuisine => cuisineTypes[cuisine]);
         const chosenStyleTypes = Object.keys(cookingStyles).filter(style => cookingStyles[style]);
 
-        const convertedCuisineTypes = [];
-        chosenCuisineTypes.map(type => {
-            this.props.cuisineTypes.map(object => {
-                if (object.type === type) {
-                    return convertedCuisineTypes.push(object.id)
-                } else {
-                    return;
-                }
-            })
+        const convertedCuisineTypes = chosenCuisineTypes.map(type => {
+            const foundCuisine = this.props.cuisineTypes.find(object => object.type === type)
+            return foundCuisine.id;
         })
 
         const convertedMealTypes = [];
         chosenMealTypes.map(type => {
-            this.props.mealTypes.map(object => {
-                if (object.type === type) {
-                    return convertedMealTypes.push(object.id)
-                } else {
-                    return;
-                }
-            })
+            const foundMeal = this.props.mealTypes.find(object => object.type === type)
+            return foundMeal.id;
         })
 
         const convertedStyleTypes = [];
         chosenStyleTypes.map(type => {
-            this.props.cookingStyles.map(object => {
-                if (object.type === type) {
-                    return convertedStyleTypes.push(object.id)
-                } else {
-                    return;
-                }
-            })
+            const foundStyle = this.props.cookingStyles.find(object => object.type === type)
+            return foundStyle.id;
         })
 
         // checking for invalid inputs
