@@ -106,17 +106,17 @@ class AddRecipe extends React.Component {
 
             let updatedMealTypes = {...this.state.mealTypes};
             this.props.currentRecipe.mealType.map(type => {
-                updatedMealTypes[type] = true
+               return updatedMealTypes[type] = true
             })
 
             let updatedCuisineTypes = {...this.state.cuisineTypes};
             this.props.currentRecipe.cuisineType.map(type => {
-                updatedCuisineTypes[type] = true
+               return updatedCuisineTypes[type] = true
             })
 
             let updatedCookingStyles = {...this.state.cookingStyles};
             this.props.currentRecipe.cookingStyle.map(type => {
-                updatedCookingStyles[type] = true
+               return updatedCookingStyles[type] = true
             })
 
             this.setState({

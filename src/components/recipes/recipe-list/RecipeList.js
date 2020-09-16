@@ -3,7 +3,6 @@ import './RecipeList.css';
 import Recipe from '../recipe/Recipe';
 
 import { BiSad } from "react-icons/bi";
-import { RiLoader5Fill } from "react-icons/ri";
 
 import { Link } from 'react-router-dom';
 
@@ -12,8 +11,6 @@ class RecipeList extends React.Component {
 
         const currentCuisine = this.props.cuisine;
         let foundRecipes = [];
-
-        console.log(this.props.recipes)
 
         if (currentCuisine === 'all') {
             foundRecipes = this.props.recipes
