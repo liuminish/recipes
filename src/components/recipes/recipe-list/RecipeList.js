@@ -3,35 +3,34 @@ import './RecipeList.css';
 import Recipe from '../recipe/Recipe';
 
 import { BiSad } from "react-icons/bi";
+import { RiLoader5Fill } from "react-icons/ri";
 
 import { Link } from 'react-router-dom';
 
 class RecipeList extends React.Component {
-    render() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            recipes: []
+        }
+    }
 
+    componentDidMount() {
         const currentCuisine = this.props.cuisine;
-        let foundRecipes = [];
 
         if (currentCuisine === 'all') {
-            return foundRecipes = this.props.recipes
+            this.setState({recipes: this.props.recipes})
+        } else {
+            const foundRecipes = this.props.recipes.filter(recipe => recipe.cuisineType.find(cuisine => cuisine === currentCuisine));
+            this.setState({recipes: foundRecipes})
         }
+    }
 
-        if (currentCuisine === 'all' && foundRecipes.length > 0) {
-            foundRecipes = this.props.recipes.filter(recipe => {
-                return recipe.cuisineType.find(cuisine => {
-                     return cuisine === currentCuisine
-                 }) 
-             });
-             
-            return (
-                <div className="recipes-container">
-                    {foundRecipes.map(recipe => {
-                        return <Recipe recipe={recipe} key={recipe.id} />
-                        })
-                    }
-                </div>
-            ) 
-        } else if (foundRecipes.length <= 0) {
+    render() {
+        const { recipes } = this.state;
+        if (this.props.isFetching) {
+            return <RiLoader5Fill /> 
+        } else if (recipes.length <=0) {
             return (<div className="no-recipes-found">
                 <p>No recipes found <BiSad /></p>
                 <p>Please add recipes<span>&nbsp;</span><Link to='/add-edit-recipe'>here</Link>!</p>
@@ -39,15 +38,13 @@ class RecipeList extends React.Component {
         } else {
             return (
                 <div className="recipes-container">
-                    {foundRecipes.map(recipe => {
+                    {recipes.map(recipe => {
                         return <Recipe recipe={recipe} key={recipe.id} />
-                        
-                    })}
+                        })
+                    }
                 </div>
-            )
-        }
-        
-        
+            ) 
+        } 
     }
 }
 
