@@ -34,8 +34,9 @@ class Searchbar extends React.Component {
         if (this.state.searchValue === '') {
             return;
         } else {
-            const searchObject = {name: this.state.searchValue}
-            this.props.searchRecipes(searchObject);
+            const searchObject = {name: this.state.searchValue};
+            const searchTerm = searchObject;
+            this.props.searchRecipes(searchObject, searchTerm);
             this.setState({searchValue: ''})
         }
         

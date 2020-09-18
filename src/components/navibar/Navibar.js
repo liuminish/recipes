@@ -56,11 +56,11 @@ class Menu extends React.Component {
                 </div>
                 <div className="menu" style={{ display: this.state.displayMenu ? 'block' : 'none' }}>
                     <p className="link" id="main-menu-item" onClick={this.changeCatDisplay}><Link to='/all-recipes'><BiFoodMenu />Recipes</Link></p>
-                    <p className="link" id="category" style={displayCategory} onClick={this.props.changeAll}>All</p>
+                    <Link to="/all-recipes"><p className="link" id="category" style={displayCategory} onClick={this.props.changeAll}>All</p></Link>
                     {cuisineList.map(type => {
                         const displayName = type.charAt(0).toUpperCase() + type.slice(1);
                         return (
-                            <p className="link" id="category" style={displayCategory} onClick={() => {this.props.changeCuisine(type)}}>{displayName}</p>
+                            <Link to="/all-recipes"><p className="link" id="category" style={displayCategory} onClick={() => {this.props.changeCuisine(type)}}>{displayName}</p></Link>
                         )
                     })}
                     <Link to='/search-by-recipe'><p className="link" id="main-menu-item"><BiSearchAlt />Search</p></Link>

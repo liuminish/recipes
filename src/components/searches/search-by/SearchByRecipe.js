@@ -112,37 +112,42 @@ class SearchByRecipe extends React.Component {
             .keys(this.state.mealTypes)
             .filter(meal => {
                 return this.state.mealTypes[meal]
+        });
+            
+        const chosenMealNumbers = chosenMealTypes.map(meal => {
+            const foundMealType = this.props.mealTypes.find(record => {
+                return record.type === meal
             })
-            .map(meal => {
-                const foundMealType = this.props.mealTypes.find(record => {
-                    return record.type === meal
-                })
 
-                return foundMealType.id
-            });
+            return foundMealType.id
+        });
 
         const chosenCuisineTypes = Object
             .keys(this.state.cuisineTypes)
             .filter(cuisine => {
                 return this.state.cuisineTypes[cuisine]
-            }).map(cuisine => {
-                const foundCuisineType = this.props.cuisineTypes.find(record => {
-                    return record.type === cuisine
-                })
+        });
 
-                return foundCuisineType.id
+        const chosenCuisineNumbers = chosenCuisineTypes.map(cuisine => {
+            const foundCuisineType = this.props.cuisineTypes.find(record => {
+                return record.type === cuisine
+            })
+
+            return foundCuisineType.id
         });
 
         const chosenStyleTypes = Object
             .keys(this.state.cookingStyles)
             .filter(style => {
                 return this.state.cookingStyles[style]
-            }).map(style => {
-                const foundCookingStyle = this.props.cookingStyles.find(record => {
-                    return record.type === style
-                })
+        });
 
-                return foundCookingStyle.id
+        const chosenStyleNumbers = chosenStyleTypes.map(style => {
+            const foundCookingStyle = this.props.cookingStyles.find(record => {
+                return record.type === style
+            })
+
+            return foundCookingStyle.id
         });
 
         // checks if filters are chosen
@@ -155,11 +160,17 @@ class SearchByRecipe extends React.Component {
         let searchObject = {};
 
         searchObject.name = this.state.searchValue;
-        searchObject.mealType = chosenMealTypes;
-        searchObject.cuisineType = chosenCuisineTypes;
-        searchObject.cookingStyle = chosenStyleTypes;
+        searchObject.mealType = chosenMealNumbers;
+        searchObject.cuisineType = chosenCuisineNumbers;
+        searchObject.cookingStyle = chosenStyleNumbers;
+
+        let searchTerm = {};
+        searchTerm.name = this.state.searchValue;
+        searchTerm.mealType = chosenMealTypes;
+        searchTerm.cuisineType = chosenCuisineTypes;
+        searchTerm.cookingStyle = chosenStyleTypes;
         
-        this.props.searchRecipes(searchObject);
+        this.props.searchRecipes(searchObject, searchTerm);
 
         // clears form & redirect
         this.setState({

@@ -196,8 +196,6 @@ recipesRouter.post('/', (req, res, next) => {
     const values = {$name: name, $image: image, $time: time, $servings: servings, $cuisineTypes: cuisineTypes, $mealTypes: mealTypes, $cookingStyles: cookingStyles, $ingredients: ingredients, $instructions: instructions, $notes: notes};
 
     if (!name || !time || !servings || !cuisineTypes || !mealTypes || !cookingStyles || !ingredients || !instructions) {
-        console.log('problem here')
-        console.log(req.body.recipe)
         res.sendStatus(400)
     } else {
         console.log('no problemo')

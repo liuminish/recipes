@@ -30,6 +30,7 @@ class App extends React.Component {
       recipes: [],
       recipeTotal: null,
       searchedRecipes: [],
+      searchTerm: {},
 
       cuisineTypes: [],
       mealTypes: [],
@@ -237,9 +238,11 @@ class App extends React.Component {
   }
 
   // searching recipes
-  searchRecipes(searchObject) {
-    console.log("searchObject", searchObject);
-    this.setState({isFetching: true})
+  searchRecipes(searchObject, searchTerm) {
+    this.setState({
+      isFetching: true,
+      searchTerm: searchTerm
+    })
     fetchData.getAllRecipes(searchObject).then(searchedRecipes => {
 
       // setting default image if there is no image uploaded
@@ -322,8 +325,6 @@ class App extends React.Component {
         return recipe.instructions = recipe.instructions.split('&');
 
       })
-
-      console.log(searchedRecipes)
       
       // setting recipes state
       this.setState({
@@ -474,6 +475,7 @@ class App extends React.Component {
             <SearchResults 
               cuisine={this.state.cuisine} 
               searchedRecipes={this.state.searchedRecipes}
+              searchTerm={this.state.searchTerm}
               isFetching={this.state.isFetching}
             />
           </Route>

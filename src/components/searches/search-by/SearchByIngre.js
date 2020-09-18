@@ -140,10 +140,11 @@ class SearchByIngre extends React.Component {
         searchObject.name = this.state.searchValue;
         searchObject.inclIngre = this.state.includeIngre;
         searchObject.exclIngre = this.state.excludeIngre;
-        
-        this.props.searchRecipes(searchObject);
-        console.log("searchObject", searchObject);
 
+        const searchTerm = searchObject;
+        
+        this.props.searchRecipes(searchObject, searchTerm);
+        
         // clear states
         this.setState({
             searchValue: '',

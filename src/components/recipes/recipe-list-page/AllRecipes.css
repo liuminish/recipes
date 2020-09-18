@@ -5,3 +5,26 @@
     width: 100%;
     max-width: 1600px;
 }
+
+.search-results {
+    margin-bottom: 0;
+}
+
+.search-term-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.search-hashtag {
+    color: #f77f00;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.search-strikeout {
+    color: grey;
+    font-size: 30px;
+    text-decoration: line-through;
+    font-weight: 500;
+}
