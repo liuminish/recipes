@@ -1,7 +1,12 @@
 import 'whatwg-fetch';
 
 const fetchData = {};
-const baseUrl = 'http://localhost:4000/api';
+let baseUrl = '';
+if (window.location.hostname.includes('localhost')) {
+  baseUrl = 'http://localhost:4000/api'
+} else {
+  baseUrl = 'https://api.recipes.liumin.dev/api'
+};
 
 // GET all cuisine types
 fetchData.getAllCuisineTypes = () => {

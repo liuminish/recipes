@@ -20,35 +20,6 @@ db.serialize(() => {
 })
 
 db.serialize(() => {
-    db.run(`DROP TABLE IF EXISTS MealTypes`)
-    db.run(`CREATE TABLE MealTypes (
-        id INTEGER NOT NULL,
-        type TEXT NOT NULL,
-        PRIMARY KEY (id)
-        )`)
-    db.run("INSERT INTO MealTypes (type) VALUES ('breakfast')", function(error) {
-        if (error) {
-            throw new Error(error);
-        }
-    });
-    db.run("INSERT INTO MealTypes (type) VALUES ('desserts')", function(error) {
-        if (error) {
-            throw new Error(error);
-        }
-    });
-    db.run("INSERT INTO MealTypes (type) VALUES ('dinner')", function(error) {
-        if (error) {
-            throw new Error(error);
-        }
-    });
-    db.run("INSERT INTO MealTypes (type) VALUES ('snacks')", function(error) {
-        if (error) {
-            throw new Error(error);
-        }
-    });
-})
-
-db.serialize(() => {
     db.run(`DROP TABLE IF EXISTS CuisineTypes`)
     db.run(`CREATE TABLE CuisineTypes (
         id INTEGER NOT NULL,
@@ -71,6 +42,35 @@ db.serialize(() => {
         }
     });
     db.run("INSERT INTO CuisineTypes (type) VALUES ('western')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+})
+
+db.serialize(() => {
+    db.run(`DROP TABLE IF EXISTS MealTypes`)
+    db.run(`CREATE TABLE MealTypes (
+        id INTEGER NOT NULL,
+        type TEXT NOT NULL,
+        PRIMARY KEY (id)
+        )`)
+    db.run("INSERT INTO MealTypes (type) VALUES ('breakfast')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO MealTypes (type) VALUES ('desserts')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO MealTypes (type) VALUES ('dinner')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO MealTypes (type) VALUES ('snacks')", function(error) {
         if (error) {
             throw new Error(error);
         }
@@ -174,6 +174,16 @@ db.serialize(() => {
         }
     });
     db.run("INSERT INTO Units (type) VALUES ('pinch')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('stalk')", function(error) {
+        if (error) {
+            throw new Error(error);
+        }
+    });
+    db.run("INSERT INTO Units (type) VALUES ('clove')", function(error) {
         if (error) {
             throw new Error(error);
         }

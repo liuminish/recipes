@@ -42,8 +42,9 @@ class AddRecipe extends React.Component {
             notes: '',
             image: UploadLogo,
 
-            // below state handles redirect state of page
-            redirect: false,
+            // below state handles redirect/error state of page
+            isRedirect: false,
+            isError: false,
 
             // below states relate to options on form
             mealTypes: reduceArray(this.props.mealTypes),
@@ -395,6 +396,7 @@ class AddRecipe extends React.Component {
 
     // function to convert data to database format and set state of recipe to post
     convertRecipe() {
+        this.setState({isError: true})
         const {
             recipeName,
             recipeTime,
@@ -486,17 +488,21 @@ class AddRecipe extends React.Component {
             notes: notes
         }
 
-        this.setState({recipeToPost: recipeToPost});
+        this.setState({
+            recipeToPost: recipeToPost,
+            isError: false
+        });
         
     }
 
     // function to add recipe
     async addRecipe() {
         await this.convertRecipe();
-        if (this.state.recipeToPost !== {}) {
-            console.log(this.state.recipeToPost)
+        if (this.state.isError) {
+            return;
+        } else {
             await fetchData.createRecipe(this.state.recipeToPost);
-            this.setState({redirect: true})
+            this.setState({isRedirect: true})
             this.props.resetModes();
             alert('Recipe created.')
         }
@@ -528,9 +534,11 @@ class AddRecipe extends React.Component {
     async updateRecipe() {
         await this.convertRecipe();
         console.log(this.state.recipeToPost)
-        if (this.state.recipeToPost !== {}) {
+        if (this.state.isError) {
+            return;
+        } else {
             await fetchData.updateRecipe(this.state.recipeToPost);
-            this.setState({redirect: true})
+            this.setState({isRedirect: true})
             this.props.resetModes();
             alert('Recipe updated.')
         }
@@ -554,7 +562,7 @@ class AddRecipe extends React.Component {
             saveOnclick = this.updateRecipe;
             clearOnclick = null;
 
-        } else if (this.state.redirect) {
+        } else if (this.state.isRedirect) {
             return <Redirect to={`/all-recipes`} />
         }
 
