@@ -195,51 +195,51 @@ class SearchByRecipe extends React.Component {
             return <Redirect to={`/search-results`} />
         } else {
             return (
-                <div>
+                <div className="advanced-search-main">
                     <form onSubmit={this.handleFormSubmit}>
-                    <h1>Advanced Search</h1>
-    
-                    {/* the below renders the main search bar + recipe/ingredient tabs */}
-    
-                    <div className="advanced-search-bar">
-                        <div>
-                            <input className='advanced-search-input' type="text" value={this.state.searchValue} onChange={this.updateSearchValue} />
-                            <div className='search-by'>
-                                <div className={searchByRecipe} id="link"><BiFoodMenu />Search by Recipe</div>
-                                <Link to="/search-by-ingre"><div className={searchByIngre} id="link"><RiShoppingBasket2Line />Search by Ingredients</div></Link>
+                        <h1>Advanced Search</h1>
+        
+                        {/* the below renders the main search bar + recipe/ingredient tabs */}
+        
+                        <div className="advanced-search-bar">
+                            <div>
+                                <input className='advanced-search-input' type="text" value={this.state.searchValue} onChange={this.updateSearchValue} />
+                                <div className='search-by'>
+                                    <div className={searchByRecipe} id="link"><BiFoodMenu /><span className="search-by-words">Search by</span>&nbsp;Recipe</div>
+                                    <Link to="/search-by-ingre"><div className={searchByIngre} id="link"><RiShoppingBasket2Line /><span className="search-by-words">Search by</span>&nbsp;Ingredients</div></Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
-    
-                    {/* the below renders the checkboxes */}
-    
-                    <div className="search-by-container">
-    
-                        <div className="search-by-detailed">
-                            <h3>Cuisine Type</h3>
-                            {cuisineOptions.map(option => {
-                                return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option]} />
-                            })}
-                        </div>  
-    
-                        <div className="search-by-detailed">
-                            <h3>Meal Type</h3>
-                            {mealOptions.map(option => {
-                                return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option]} />
-                            })}
-                        </div>
-                        
-                        <div className="search-by-detailed">
-                            <h3>Cooking Style</h3>
-                            {styleOptions.map(option => {
-                                return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option]} />
-                            })}
-                        </div>  
+        
+                        {/* the below renders the checkboxes */}
+        
+                        <div className="search-by-container">
+        
+                            <div className="search-by-detailed">
+                                <h3>Cuisine Type</h3>
+                                {cuisineOptions.map(option => {
+                                    return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option]} />
+                                })}
+                            </div>  
+        
+                            <div className="search-by-detailed">
+                                <h3>Meal Type</h3>
+                                {mealOptions.map(option => {
+                                    return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option]} />
+                                })}
+                            </div>
                             
-                    </div>
-                    <div className="advanced-search-button" onClick={this.handleFormSubmit}>
-                        Advanced Search
-                    </div>
+                            <div className="search-by-detailed">
+                                <h3>Cooking Style</h3>
+                                {styleOptions.map(option => {
+                                    return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option]} />
+                                })}
+                            </div>  
+                                
+                        </div>
+                        <div className="advanced-search-button" onClick={this.handleFormSubmit}>
+                            Advanced Search
+                        </div>
                     </form>
                 </div>
             )

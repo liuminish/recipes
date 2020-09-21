@@ -30,13 +30,16 @@ class Mainpage extends React.Component {
         this.setState({searchValue: event.target.value})
     }
 
-    handleSearch() {
+    handleSearch(event) {
         if (this.state.searchValue === '') {
             return;
-        } else {
-            const searchObject = {name: this.state.searchValue}
-            this.props.searchRecipes(searchObject);
+        } else if (event.key === 'Enter') {
+            const searchObject = {name: this.state.searchValue};
+            const searchTerm = {name: this.state.searchValue};
+            this.props.searchRecipes(searchObject, searchTerm);
             this.setState({isRedirect: true})
+        } else {
+            return;
         }
     }
     
@@ -51,12 +54,12 @@ class Mainpage extends React.Component {
                 <div className="main">
                     <h1>What shall we eat today?</h1>
                     <div className="search-bar">
-                        <input className={inputClass} type="text" value={this.state.searchValue} onMouseEnter={this.makeInputVisible} onMouseLeave={this.makeInputInvisible} onChange={this.updateSearchValue} />
-                        <RiSearchLine className="link" id="main-search-logo" onClick={this.handleSearch}/>
+                        <input className={inputClass} type="text" value={this.state.searchValue} onMouseEnter={this.makeInputVisible} onMouseLeave={this.makeInputInvisible} onChange={this.updateSearchValue} onKeyPress={this.handleSearch} />
+                        <RiSearchLine className="link" id="main-search-logo" onClick={()=> this.handleSearch({key: "Enter"})} />
                     </div>
                     <div className="other-searches">
                         <Link to="/search-by-recipe" className="link">Advanced Search</Link>
-                        <span>|</span>
+                        <span>&nbsp;|&nbsp;</span>
                         <Link to={`/recipe-page/${randomRecipeIndex}`} className="link">Surprise me!</Link>
                     </div>
                 </div>
@@ -65,7 +68,5 @@ class Mainpage extends React.Component {
         
     }
 }
-
-//when surprise me is clicked, generate another random recipe page.
 
 export default Mainpage;

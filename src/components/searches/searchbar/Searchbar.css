@@ -37,3 +37,16 @@
 #quick-search-logo {
     margin-left: 10px;
 }
+
+/* Media Queries */
+@media only screen and (max-width: 780px) {
+    .input-opacity, .input-solid {
+        display: none;
+    } 
+}
+
+@media only screen and (max-width: 370px) {
+    #quick-search-logo {
+        font-size: 40px;
+    }
+}

@@ -14,10 +14,16 @@
     opacity: 0.9;
     margin-bottom: 30px;
     height: 80px;
-    width: 800px;
+    max-width: 800px;
+    width: 90vw;
     font-size: 40px;
     border: 0;
     border-radius: 5px;
+}
+@media only screen and (max-width: 580px) {
+    .advanced-search-main h1 {
+        font-size: 50px;
+    }
 }
 
 /* styles for search by options */
@@ -53,6 +59,22 @@
     border-radius: 15px 15px 0px 0px;
 }
 
+@media only screen and (max-width: 580px) {
+    .active-search, .inactive-search {
+        font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .active-search, .inactive-search {
+        font-size: 20px;
+    }
+
+    .search-by-words {
+        display: none;
+    }
+}
+
 /* styles for search by component */
 
 .search-by-container {
@@ -60,16 +82,24 @@
     justify-content: space-evenly;
     background-color: white;
     margin: auto;
-    padding: 30px 20px;
-    width: 800px;
+    padding: 30px 30px;
+    max-width: 800px;
+    width: 85vw;
     border-radius: 10px;
+}
+
+@media only screen and (max-width: 425px) {
+    .search-by-container {
+        flex-direction: column;
+        padding: 10px 30px;
+        width: 70vw;
+    }
 }
 
 /* styles for search by recipe */
 
 .search-by-detailed {
     width: 25%;
-    padding-left: 20px;
     text-align: left;
 }
 
@@ -77,6 +107,13 @@
     margin: 0 0 15px 0;
     padding: 5px 0px 5px 5px;
     border-bottom: dotted 2px grey;
+}
+
+@media only screen and (max-width: 425px) {
+    .search-by-detailed {
+        margin: 5px 0;
+        width: 80%;
+    }
 }
 
 /* styles for search by ingredient */
@@ -118,6 +155,16 @@
 
 .ingre-input {
     margin-right: 5px;
+}
+
+@media only screen and (max-width: 425px) {
+    .ingredients-component {
+        width: 90%;
+    }
+
+    .ingre-active-include, .ingre-active-exclude, .ingre-inactive {
+        font-size: 15px;
+    } 
 }
 
 /* styles for advanced search button */

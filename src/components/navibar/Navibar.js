@@ -9,7 +9,8 @@ class Topbar extends React.Component {
     render() {
         return (
             <div className="topbar">
-                <RiRestaurant2Fill id="main-logo" /><Link className="main-logo" to="/"><span id="main-logo">Recipes!</span></Link>
+                <div><RiRestaurant2Fill id="main-logo" /></div>
+                <div><Link className="main-logo" to="/"><span id="main-logo">Recipes!</span></Link></div>
             </div>
         )
     }

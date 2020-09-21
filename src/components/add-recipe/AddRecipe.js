@@ -232,12 +232,14 @@ class AddRecipe extends React.Component {
         })
     }
 
-    addIngre() {
+    addIngre(event) {
         
         if (this.state.currentIngreAmount === '' || this.state.currentIngre === '' ) {
             return;
         } else if (this.state.currentIngreAmount < 1) {
             alert('Please input valid ingredient.');
+            return;
+        } else if (event.key !== "Enter") {
             return;
         }
 
@@ -286,7 +288,7 @@ class AddRecipe extends React.Component {
         })
     }
 
-    addInstruct() {
+    addInstruct(event) {
 
         const clonedInstructList = [...this.state.instructList];
 
@@ -294,6 +296,11 @@ class AddRecipe extends React.Component {
         if (this.state.currentInstruct === '') {
             return;
         } 
+
+        // check if event key is "Enter"
+        else if (event.key !== "Enter") {
+            return;
+        }
         
         // check if this addition is due to editing of existing instruction
         else if (this.state.instructionCount <= clonedInstructList.length) {
@@ -495,12 +502,10 @@ class AddRecipe extends React.Component {
 
     // function to add recipe
     async addRecipe() {
-        console.log('posting')
         await this.convertRecipe();
         if (this.state.isError) {
             return;
         } else {
-            console.log(this.state.recipeToPost)
             await fetchData.createRecipe(this.state.recipeToPost);
             this.setState({isRedirect: true})
             this.props.resetModes();
@@ -664,7 +669,7 @@ class AddRecipe extends React.Component {
                             Ingredients:
                         </div>
                         <div className="add-recipe-ingre-container">
-                            <div className="add-recipe-new-ingre">
+                            <div className="add-recipe-new-ingre" onKeyPress={this.addIngre}>
                                 <input type="number" value={this.state.currentIngreAmount} onChange={this.changeIngreAmount} />
                                 <select value={this.state.currentIngreUnit} onChange={this.changeIngreUnit}>
                                     {this.state.units.map(unit => {
@@ -672,7 +677,7 @@ class AddRecipe extends React.Component {
                                     })}
                                 </select>
                                 <input type="text" value={this.state.currentIngre} onChange={this.changeIngre} />
-                                <RiAddLine id="add-button" onClick={this.addIngre}/>
+                                <RiAddLine id="add-button" onClick={() => this.addIngre({key: "Enter"})}/>
                             </div>
                             <div className="add-recipe-ingre-list">
                                 {this.state.addedIngreList.map(ingredient => {
@@ -690,7 +695,7 @@ class AddRecipe extends React.Component {
 
                     {/* renders instructions field */}
                     <div className="add-recipe-individual-row">
-                        <div className="add-recipe-key">
+                        <div className="add-recipe-instructions-key">
                             Instructions:
                         </div>
                         <div className="add-recipe-instructions">
@@ -719,8 +724,8 @@ class AddRecipe extends React.Component {
                                 <div className="add-recipe-instruction-number">
                                     {this.state.instructionCount}
                                 </div>
-                                <textarea value={this.state.currentInstruct} onChange={this.changeInstruct} />
-                                <RiAddLine id="add-button" onClick={this.addInstruct}/>
+                                <textarea value={this.state.currentInstruct} onChange={this.changeInstruct} onKeyPress={this.addInstruct} />
+                                <RiAddLine id="add-button" onClick={() => this.addInstruct({key: "Enter"})}/>
                             </div>
 
                         </div>

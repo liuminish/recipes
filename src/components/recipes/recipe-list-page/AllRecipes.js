@@ -26,7 +26,7 @@ class AllRecipes extends React.Component {
         } else {
 
             return (
-                <div>
+                <div className="all-recipes">
                     <h1>
                         {cuisine} Recipes
                     </h1>
