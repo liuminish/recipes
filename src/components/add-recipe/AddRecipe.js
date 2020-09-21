@@ -501,6 +501,7 @@ class AddRecipe extends React.Component {
         if (this.state.isError) {
             return;
         } else {
+            console.log(this.state.recipeToPost)
             await fetchData.createRecipe(this.state.recipeToPost);
             this.setState({isRedirect: true})
             this.props.resetModes();
