@@ -466,6 +466,7 @@ class App extends React.Component {
               mealTypes={this.state.mealTypes}
               cookingStyles={this.state.cookingStyles}
               units={this.state.units}
+              isFetching={this.state.isFetching}
               getAllRecipes={this.getAllRecipes}
               resetModes={this.resetModes}
             />

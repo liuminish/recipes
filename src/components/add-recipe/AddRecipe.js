@@ -564,6 +564,12 @@ class AddRecipe extends React.Component {
 
         } else if (this.state.isRedirect) {
             return <Redirect to={`/all-recipes`} />
+        } else if (this.props.isFetching) {
+            return (
+                <div className="loading-screen">
+                    <RiLoader5Fill />
+                </div>
+            )
         }
 
         return (
