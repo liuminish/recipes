@@ -420,14 +420,12 @@ class AddRecipe extends React.Component {
             return foundCuisine.id;
         })
 
-        const convertedMealTypes = [];
-        chosenMealTypes.map(type => {
+        const convertedMealTypes = chosenMealTypes.map(type => {
             const foundMeal = this.props.mealTypes.find(object => object.type === type)
             return foundMeal.id;
         })
 
-        const convertedStyleTypes = [];
-        chosenStyleTypes.map(type => {
+        const convertedStyleTypes = chosenStyleTypes.map(type => {
             const foundStyle = this.props.cookingStyles.find(object => object.type === type)
             return foundStyle.id;
         })
