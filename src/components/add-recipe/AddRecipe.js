@@ -497,6 +497,7 @@ class AddRecipe extends React.Component {
 
     // function to add recipe
     async addRecipe() {
+        console.log('posting')
         await this.convertRecipe();
         if (this.state.isError) {
             return;
