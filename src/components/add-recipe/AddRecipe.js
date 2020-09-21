@@ -5,7 +5,7 @@ import Checkbox from '../../utils/checkbox';
 import { ItemizedListExtended, ItemizedListNoDelete } from '../../utils/itemized-list';
 import fetchData from '../../utils/fetch-data';
 
-import { RiAddLine, RiDeleteBinLine, RiArrowUpCircleLine, RiArrowDownCircleLine, RiEdit2Line } from "react-icons/ri";
+import { RiAddLine, RiDeleteBinLine, RiArrowUpCircleLine, RiArrowDownCircleLine, RiEdit2Line, RiLoader5Fill } from "react-icons/ri";
 import { Redirect } from 'react-router-dom';
 
 import UploadLogo from '../../media/upload_logo.png';
