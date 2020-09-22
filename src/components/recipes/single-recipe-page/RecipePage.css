@@ -13,6 +13,18 @@ h2 {
     border-radius: 0 0 5px 5px; 
 }
 
+@media only screen and (max-width: 1024px) {
+    .recipe-page {
+        width: 80vw;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .recipe-page {
+        width: 90vw;
+    }
+}
+
 /* styles for recipe page part one - picture, title and information */
 
 .recipe-page-part-one {
@@ -64,6 +76,39 @@ h2 {
     align-items: top;
 }
 
+@media only screen and (max-width: 768px) {
+    .recipe-page h1 {
+        font-size: 30px;
+    }
+
+    .recipe-page-part-one {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px auto;
+        height: 200px;
+        width: 80%;
+    }
+}
+@media only screen and (max-width: 425px) {
+    .recipe-page-part-one {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .recipe-page-image-container {
+        width: 90%;
+        overflow: hidden;
+    }
+
+    .recipe-title-info {
+        width: 90%;
+    }
+
+    .recipe-page h1 {
+        padding-top: 10px;
+        font-size: 25px;
+    }
+}
 
 /* styles for ingredient list and instructions list */
 
@@ -82,7 +127,7 @@ h2 {
 
 .ingredients-list {
     margin: 0px 20px;
-    width:30%;
+    width: 30%;
     text-align: left;
     border-radius: 5px;
 }
@@ -95,14 +140,34 @@ h2 {
     border-radius: 5px;
 }
 
+ul, ol {
+    padding-left: 20px;
+}
+
 ul li {
     margin-bottom: 5px;
 }
 
 ol li {
     margin-bottom: 15px;
-   
 }
+
+@media only screen and (max-width: 768px) {
+    .recipe-page-part-two {
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .recipe-page-part-two {
+        flex-direction: column;
+    }
+
+    .ingredients-list, .preparation-list {
+        width: 90%;
+    }
+}
+
 
 /* styles for buttons */
 
@@ -110,7 +175,7 @@ ol li {
     display: flex;
     justify-content: space-between;
     margin: auto;
-    height: 6vh;
+    height: 35px;
     width: 60vw;
 }
 
@@ -120,6 +185,7 @@ ol li {
     margin: 10px 0;
     padding: 5px;
     width: 250px;
+    height: 33px;
     text-align: center;
     color: #f77f00;
     font-size: 30px;
@@ -130,4 +196,28 @@ ol li {
 .edit-buttons:hover {
     cursor: pointer;
     opacity: 1;
+}
+
+@media only screen and (max-width: 1024px) {
+    .edit-buttons-container {
+        width: 80vw;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .edit-buttons-container {
+        width: 90vw;
+    }
+
+    .edit-buttons {
+        width: 25vw;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .edit-buttons {
+        height: 21px;
+        width: 24vw;
+        font-size: 18px;
+    }
 }
