@@ -50,7 +50,7 @@
 
 @media only screen and (max-width: 425px) {
     .all-recipes h1, .search-results h1 {
-        font-size: 50px;
+        font-size: 35px;
     }
 
     .search-hashtag, .search-strikeout {

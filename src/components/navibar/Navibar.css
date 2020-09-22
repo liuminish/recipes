@@ -64,7 +64,7 @@ a {
     justify-content: space-between;
     align-content: center;
     background-color: #f77f00;
-    padding: 10px 20px 0 20px;
+    padding: 10px 0 0 0;
     height: 70px;
     width: 100vw;
     color: white;
@@ -72,9 +72,9 @@ a {
 
 /* styles for menu icon */
 .menu-icon {
-    padding-top: 3px;
     height: 100%;
     width: 20%;
+    padding: 3px 0 0 20px;
     color: white;
     font-size: 50px;
     text-align: left;
@@ -97,7 +97,7 @@ a {
 .quick-search {
     display: flex;
     justify-content: flex-end;
-    padding-top: 3px;
+    padding: 3px 20px 0 0;
     height: 75%;
     width: 25%;
     color: white;
@@ -156,12 +156,8 @@ a {
         font-size: 35px;
     }
 
-    .quick-search {
-        width: 30%;
-    }
-
     .input-opacity, .input-solid {
-        font-size: 20px;
+        display: none;
     } 
 }
 
@@ -208,9 +204,7 @@ a {
 }
 
 @media only screen and (max-width: 425px) {
-
     .menu {
         width: 30%;
     }
-
 }
