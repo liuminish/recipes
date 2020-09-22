@@ -51,7 +51,7 @@ class Mainpage extends React.Component {
             const randomRecipeIndex = Number(Math.floor((Math.random() * this.props.recipeTotal) + 1));
 
             return (
-                <div className="main">
+                <div className="main-page">
                     <h1>What shall we eat today?</h1>
                     <div className="search-bar">
                         <input className={inputClass} type="text" value={this.state.searchValue} onMouseEnter={this.makeInputVisible} onMouseLeave={this.makeInputInvisible} onChange={this.updateSearchValue} onKeyPress={this.handleSearch} />

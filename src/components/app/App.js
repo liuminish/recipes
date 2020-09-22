@@ -2,8 +2,7 @@ import React from 'react';
 import './App.css';
 
 // import main components
-import { Topbar, Menu } from '../navibar/Navibar';
-import Searchbar from '../searches/searchbar/Searchbar'
+import Navibar from '../navibar/Navibar';
 import Mainpage from '../main-page/MainPage';
 
 // import other components
@@ -403,15 +402,11 @@ class App extends React.Component {
     }
     return (
       <div className="App">
-        <Topbar />
 
-        <Menu 
+        <Navibar 
           changeAll={this.changeAll}
           changeCuisine={this.changeCuisine}
           cuisineTypes={this.state.cuisineTypes}
-        />
-
-        <Searchbar 
           searchRecipes={this.searchRecipes}
         />
 
