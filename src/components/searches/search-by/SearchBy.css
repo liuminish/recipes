@@ -122,7 +122,20 @@
 @media only screen and (max-width: 425px) {
     .search-by-detailed {
         margin: 5px 0;
-        width: 80%;
+        width: 30%;
+    }
+
+    .search-by-detailed h3 {
+        font-size: 12px;
+    }
+
+    .search-by-detailed label {
+        font-size: 12px;
+    }
+
+    .search-by-detailed [type="checkbox"] {
+        height: 10px;
+        width: 10px;
     }
 }
 
@@ -142,6 +155,8 @@
 
 .ingre-active-include {
     margin: 2px;
+    max-width: 90%;
+    min-width: 100%;
     width: fit-content;
     font-size: 20px;
     border: dotted 2px #f77f00;
@@ -150,6 +165,8 @@
 
 .ingre-active-exclude {
     margin: 2px;
+    max-width: 90%;
+    min-width: 100%;
     width: fit-content;
     font-size: 20px;
     border: dotted 2px grey;
@@ -171,9 +188,12 @@
     .ingredients-component {
         width: 90%;
     }
-
+ 
+    .ingredients-component h3 {
+        font-size: 13px;
+    }
     .ingre-active-include, .ingre-active-exclude, .ingre-inactive {
-        font-size: 15px;
+        font-size: 12px;
     } 
 }
 
@@ -195,4 +215,11 @@
 .advanced-search-button:hover {
     cursor: pointer;
     opacity: 1;
+}
+
+@media only screen and (max-width: 425px) {
+    .advanced-search-button {
+        width: 200px;
+        font-size: 20px;
+    }
 }

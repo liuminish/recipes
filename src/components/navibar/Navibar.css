@@ -165,6 +165,7 @@ a {
 
 .menu {
     position: absolute;
+    z-index: 1;
     background-color: white;
     opacity: 0.7;
     margin: 0;
