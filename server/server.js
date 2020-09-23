@@ -10,7 +10,9 @@ const morgan = require('morgan');
 const errorhandler = require('errorhandler');
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+    allowedHeaders: [ 'Accept-Version', 'Authorization', 'Credentials', 'Content-Type' ]
+}));
 app.use(morgan('dev'));
 app.use(errorhandler());
 
