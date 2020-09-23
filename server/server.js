@@ -10,11 +10,7 @@ const morgan = require('morgan');
 const errorhandler = require('errorhandler');
 
 app.use(bodyParser.json());
-app.use(cors({
-    // origin: [/\.recipes\.liumin\.dev$/, /localhost/],
-    origin: false,
-    credentials: true
-}));
+app.use(cors());
 app.use(morgan('dev'));
 app.use(errorhandler());
 
