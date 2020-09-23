@@ -264,9 +264,6 @@ recipesRouter.delete('/:recipeId', (req, res, next) => {
 // POST/add one image
 recipesRouter.post('/uploadImage', (req, res, next) => {
     console.log('hello');
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header("Access-Control-Allow-Methods', 'GET,POST");
 
     const fileName = req.files.myImage.name;
     let path = '/images/' + fileName;
