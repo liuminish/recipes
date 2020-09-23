@@ -12,7 +12,6 @@ const errorhandler = require('errorhandler');
 app.use(bodyParser.json());
 app.use(cors({
     origin: [/\.recipes\.liumin\.dev$/, /localhost/],
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD'],
     credentials: true
 }));
 app.use(morgan('dev'));
