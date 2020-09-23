@@ -262,6 +262,7 @@ recipesRouter.delete('/:recipeId', (req, res, next) => {
 
 // POST/add one image
 recipesRouter.post('/uploadImage', (req, res, next) => {
+    console.log('hello');
 
     const fileName = req.files.myImage.name;
     let path = '/images/' + fileName;
