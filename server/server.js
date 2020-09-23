@@ -11,7 +11,8 @@ const errorhandler = require('errorhandler');
 
 app.use(bodyParser.json());
 app.use(cors({
-    methods: ['POST', 'GET', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD']
+    origin: '*',
+    methods: ['POST', 'GET', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
 }));
 app.use(morgan('dev'));
 app.use(errorhandler());
