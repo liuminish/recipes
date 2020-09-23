@@ -4,6 +4,9 @@ const recipesRouter = express.Router();
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
+const fileupload = require('express-fileupload');
+recipesRouter.use(fileupload())
+
 // route param for recipe
 recipesRouter.param('recipeId', (req, res, next, id) => {
 
@@ -198,7 +201,6 @@ recipesRouter.post('/', (req, res, next) => {
     if (!name || !time || !servings || !cuisineTypes || !mealTypes || !cookingStyles || !ingredients || !instructions) {
         res.sendStatus(400)
     } else {
-        console.log('no problemo')
         db.run(sql, values, function(err) {
 
             if (err) {
@@ -256,6 +258,21 @@ recipesRouter.delete('/:recipeId', (req, res, next) => {
         }
     })
 
+})
+
+// POST/add one image
+recipesRouter.post('/uploadImage', (req, res, next) => {
+
+    const fileName = req.files.myImage.name;
+    let path = '/images/' + fileName;
+
+    req.files.myImage.mv(path, (err) => {
+        if (err) {
+            next(err)
+        } else {
+            res.status(201).json({path: path})
+        }
+    })
 })
 
 module.exports = recipesRouter;

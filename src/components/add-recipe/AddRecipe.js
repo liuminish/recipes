@@ -66,6 +66,7 @@ class AddRecipe extends React.Component {
             instructList: [],
 
             // below state stores current recipe to post
+            imageToPost: '',
             recipeToPost: {}
 
         }
@@ -95,6 +96,7 @@ class AddRecipe extends React.Component {
         this.handleCuisineCheckboxChange = this.handleCuisineCheckboxChange.bind(this);
         this.handleStyleCheckboxChange = this.handleStyleCheckboxChange.bind(this);
 
+        this.uploadImage = this.uploadImage.bind(this);
         this.convertRecipe = this.convertRecipe.bind(this);
         this.addRecipe = this.addRecipe.bind(this);
         this.updateRecipe = this.updateRecipe.bind(this);
@@ -142,10 +144,10 @@ class AddRecipe extends React.Component {
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
             this.setState({
-              image: URL.createObjectURL(img)
+              image: URL.createObjectURL(img),
+              imageToPost: img
             });
-          }
-        
+        }
     }
 
     // functions to control change in name, time, servings, notes
@@ -401,6 +403,21 @@ class AddRecipe extends React.Component {
         })
     }
 
+    // function to upload image
+    uploadImage() {
+        // if image is null, change to blank string
+        if (!this.state.imageToPost) {
+            this.setState({imageToPost: ''})
+        } else {
+            console.log('uploading image')
+            return fetchData.uploadImage(this.state.imageToPost).then(path => {
+                console.log('image uploaded to', path)
+                this.setState({imageToPost: path})
+                console.log(this.state.imageToPost)
+            })
+        }
+    }
+
     // function to convert data to database format and set state of recipe to post
     convertRecipe() {
         this.setState({isError: true})
@@ -409,7 +426,7 @@ class AddRecipe extends React.Component {
             recipeTime,
             recipeServings,
             notes,
-            image,
+            imageToPost,
             mealTypes,
             cuisineTypes,
             cookingStyles,
@@ -473,16 +490,11 @@ class AddRecipe extends React.Component {
 
         const convertedInstructList = instructList.join('&');
 
-        // if image is null, change to blank string
-        if (!image) {
-            this.setState({image: ''})
-        }
-
         // sending POST request to server
         const recipeToPost = {
             id: this.props.isEdit ? this.props.currentRecipe.id : null,
             name: recipeName,
-            image: image,
+            image: imageToPost,
             time: recipeTime,
             servings: recipeServings,
             cuisineTypes: convertedCuisineTypes.toString(),
@@ -497,11 +509,15 @@ class AddRecipe extends React.Component {
             recipeToPost: recipeToPost,
             isError: false
         });
+        console.log('recipe conversion done!!')
+        console.log(recipeToPost)
         
     }
 
     // function to add recipe
     async addRecipe() {
+        console.log('adding recipe...')
+        await this.uploadImage();
         await this.convertRecipe();
         if (this.state.isError) {
             return;

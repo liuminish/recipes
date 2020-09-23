@@ -109,7 +109,6 @@ fetchData.getAllRecipes = (searchObject) => {
     }, '')
 
     searchTerm = `?name=${searchObject.name}&${cuisineTerm}&${mealTerm}&${styleTerm}`;
-    console.log(searchTerm);
     
   } else if (searchObject.inclIngre || searchObject.exclIngre) {
 
@@ -137,7 +136,6 @@ fetchData.getAllRecipes = (searchObject) => {
   }
 
   const url = `${baseUrl}/recipes${searchTerm}`;
-  console.log("url", url);
 
   return fetch(url).then(response => {
     if (!response.ok) {
@@ -230,5 +228,26 @@ fetchData.deleteRecipe = recipeId => {
   return fetch(url, fetchOptions);
 };
 
+// POST/upload one image
+fetchData.uploadImage = image => {
+  const url = `${baseUrl}/recipes/uploadImage`;
+  const formData = new FormData()
+  formData.append('myImage', image)
+
+  const fetchOptions = {
+    method: 'POST',
+    body: formData
+  };
+
+  return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      return jsonResponse.path;
+    });
+  });
+  
+};
 
 export default fetchData;
