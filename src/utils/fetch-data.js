@@ -234,12 +234,13 @@ fetchData.uploadImage = image => {
   const formData = new FormData()
   formData.append('myImage', image)
 
+  const headers = new Headers
+  headers.append('Access-Control-Allow-Origin', '*')
+
   const fetchOptions = {
     method: 'POST',
     body: formData,
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    }
+    headers
   };
 
   return fetch(url, fetchOptions).then(response => {
