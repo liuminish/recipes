@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path')
 const recipesRouter = express.Router();
 
 const sqlite3 = require('sqlite3');
@@ -266,13 +267,13 @@ recipesRouter.post('/uploadImage', (req, res, next) => {
     console.log('hello');
 
     const fileName = req.files.myImage.name;
-    let path = '/images/' + fileName;
+    const uploadPath = path.resolve('images', fileName);
 
-    req.files.myImage.mv(path, (err) => {
+    req.files.myImage.mv(uploadPath, (err) => {
         if (err) {
             next(err)
         } else {
-            res.status(201).json({path: path})
+            res.status(201).json({path: uploadPath})
         }
     })
 })
