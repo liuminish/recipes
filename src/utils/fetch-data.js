@@ -230,7 +230,7 @@ fetchData.deleteRecipe = recipeId => {
 
 // POST/upload one image
 fetchData.uploadImage = image => {
-  const url = 'https://cors-anywhere.herokuapp.com/' + `${baseUrl}/recipes/uploadImage`;
+  const url = `${baseUrl}/recipes/uploadImage`;
   const formData = new FormData()
   formData.append('myImage', image)
 
