@@ -16,4 +16,7 @@ apiRouter.use('/cooking-styles', stylesRouter);
 const unitsRouter = require('./units');
 apiRouter.use('/units', unitsRouter);
 
+const imagesRouter = require('./images');
+apiRouter.use('/images', imagesRouter);
+
 module.exports = apiRouter;

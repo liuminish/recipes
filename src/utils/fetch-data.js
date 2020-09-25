@@ -230,7 +230,7 @@ fetchData.deleteRecipe = recipeId => {
 
 // POST/upload one image
 fetchData.uploadImage = image => {
-  const url = `${baseUrl}/recipes/uploadImage`;
+  const url = `${baseUrl}/images`;
   const formData = new FormData()
   formData.append('myImage', image)
 
@@ -240,6 +240,21 @@ fetchData.uploadImage = image => {
   };
 
   return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      return jsonResponse.path;
+    });
+  });
+  
+};
+
+// GET one image
+fetchData.downloadImage = fileName => {
+  const url = `${baseUrl}/images/${fileName}`;
+
+  return fetch(url).then(response => {
     if (!response.ok) {
       return new Promise(resolve => resolve(null));
     }

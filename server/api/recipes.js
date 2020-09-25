@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const path = require('path')
 const recipesRouter = express.Router();
 
@@ -264,7 +263,6 @@ recipesRouter.delete('/:recipeId', (req, res, next) => {
 
 // POST/add one image
 recipesRouter.post('/uploadImage', (req, res, next) => {
-    console.log('hello');
 
     const fileName = req.files.myImage.name;
     const uploadPath = path.resolve('images', fileName);
@@ -273,7 +271,7 @@ recipesRouter.post('/uploadImage', (req, res, next) => {
         if (err) {
             next(err)
         } else {
-            res.status(201).json({path: uploadPath})
+            res.status(201).json({path: fileName})
         }
     })
 })
