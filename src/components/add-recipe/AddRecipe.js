@@ -412,7 +412,7 @@ class AddRecipe extends React.Component {
             console.log('uploading image')
             return fetchData.uploadImage(this.state.imageToPost).then(fileName => {
                 console.log('image name is', fileName)
-                this.setState({imageToPost: path})
+                this.setState({imageToPost: fileName})
                 console.log(this.state.imageToPost)
             })
         }
