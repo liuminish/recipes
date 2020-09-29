@@ -44,11 +44,8 @@ imagesRouter.post('/', (req, res, next) => {
         }
         return result;
      }
-     
-    const buffer = readChunk.sync(req.files.myImage, 0, 12);
-    const fileType = imageType(buffer).ext;
 
-    const fileName = makeid(10) + '.' + fileType;
+    const fileName = makeid(10);
     console.log(fileName)
     const uploadPath = path.resolve('images', fileName);
 
