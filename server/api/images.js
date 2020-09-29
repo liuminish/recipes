@@ -33,10 +33,22 @@ imagesRouter.get('/:name', (req, res, next) => {
       })
 })
 
-// POST/add one image
+// POST/add one imagem
 imagesRouter.post('/', (req, res, next) => {
+    const makeid = (length) => {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+     }
+     
+    const buffer = readChunk.sync(req.files.myImage, 0, 12);
+    const fileType = imageType(buffer).ext;
 
-    const fileName = req.files.myImage.name
+    const fileName = makeid(10) + '.' + fileType;
     console.log(fileName)
     const uploadPath = path.resolve('images', fileName);
 
@@ -44,7 +56,7 @@ imagesRouter.post('/', (req, res, next) => {
         if (err) {
             next(err)
         } else {
-            res.status(201).json({name: fileName})
+            res.status(201).json({path: fileName})
         }
     })
 })
