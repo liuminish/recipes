@@ -18,7 +18,6 @@ class RecipePage extends React.Component {
     }
 
     async componentDidMount() {
-        console.log(this.props.match)
         this.setState({isFetching: true})
         const { params: { recipeId } } = this.props.match;
         await this.props.getFullRecipe(recipeId);

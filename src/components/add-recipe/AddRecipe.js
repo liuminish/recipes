@@ -405,15 +405,19 @@ class AddRecipe extends React.Component {
 
     // function to upload image
     uploadImage() {
-        // if image is null, change to blank string
+        const imageType = /image.*/;
+        
         if (!this.state.imageToPost) {
             this.setState({imageToPost: ''})
+        } else if (!this.state.imageToPost.type.match(imageType)) {
+            alert('Sorry, only images are allowed.')
+            return
         } else {
+            console.log('image type is', this.state.imageToPost.type)
             console.log('uploading image')
             return fetchData.uploadImage(this.state.imageToPost).then(fileName => {
                 console.log('image name is', fileName)
                 this.setState({imageToPost: fileName})
-                console.log(this.state.imageToPost)
             })
         }
     }

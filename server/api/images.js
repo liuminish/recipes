@@ -12,7 +12,7 @@ imagesRouter.use(fileupload())
 imagesRouter.get('/:name', (req, res, next) => {
 
     const options = {
-        root: path.join('/root/recipes/server/images/', 'public'),
+        root: path.join('/root/recipes/server/images/'),
         dotfiles: 'deny',
         headers: {
           'x-timestamp': Date.now(),
@@ -33,16 +33,18 @@ imagesRouter.get('/:name', (req, res, next) => {
 // POST/add one image
 imagesRouter.post('/', (req, res, next) => {
     const makeid = (length) => {
-        let result           = '';
-        const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         const charactersLength = characters.length;
         for ( var i = 0; i < length; i++ ) {
            result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
      }
+     
+    const fileType = req.files.myImage.type.split('.');
 
-    const fileName = makeid(10);
+    const fileName = makeid(10) + '.' + fileType[1];
     const uploadPath = path.resolve('images', fileName);
 
     req.files.myImage.mv(uploadPath, (err) => {
