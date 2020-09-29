@@ -33,7 +33,7 @@ imagesRouter.get('/:name', (req, res, next) => {
       })
 })
 
-// POST/add one imagem
+// POST/add one image
 imagesRouter.post('/', (req, res, next) => {
 
     const fileName = req.files.myImage.name
@@ -43,7 +43,7 @@ imagesRouter.post('/', (req, res, next) => {
         if (err) {
             next(err)
         } else {
-            res.status(201).json({path: fileName})
+            res.status(201).json({name: fileName})
         }
     })
 })
