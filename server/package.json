@@ -16,6 +16,7 @@
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
+    "file-type": "^15.0.1",
     "image-type": "^4.1.0",
     "morgan": "^1.10.0",
     "read-chunk": "^3.2.0",
