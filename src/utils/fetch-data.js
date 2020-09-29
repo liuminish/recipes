@@ -228,5 +228,41 @@ fetchData.deleteRecipe = recipeId => {
   return fetch(url, fetchOptions);
 };
 
+// POST/upload one image
+fetchData.uploadImage = image => {
+  const url = `${baseUrl}/images`;
+  const formData = new FormData()
+  formData.append('myImage', image)
+
+  const fetchOptions = {
+    method: 'POST',
+    body: formData,
+  };
+
+  return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      return jsonResponse.path;
+    });
+  });
+  
+};
+
+// GET one image
+fetchData.downloadImage = fileName => {
+  const url = `${baseUrl}/images/${fileName}`;
+
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      return jsonResponse;
+    });
+  });
+  
+};
 
 export default fetchData;
