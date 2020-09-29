@@ -35,6 +35,7 @@ imagesRouter.get('/:name', (req, res, next) => {
 
 // POST/add one imagem
 imagesRouter.post('/', (req, res, next) => {
+  console.log('hiii')
     const makeid = (length) => {
         let result = '';
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -50,7 +51,7 @@ imagesRouter.post('/', (req, res, next) => {
 
     const fileName = makeid(10) + '.' + fileType;
     console.log(fileName)
-    const uploadPath = path.resolve('server/images', fileName);
+    const uploadPath = path.resolve('images', fileName);
 
     req.files.myImage.mv(uploadPath, (err) => {
         if (err) {
