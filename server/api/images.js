@@ -37,6 +37,7 @@ imagesRouter.get('/:name', (req, res, next) => {
 imagesRouter.post('/', (req, res, next) => {
 
     const fileName = req.files.myImage.name
+    console.log(fileName)
     const uploadPath = path.resolve('images', fileName);
 
     req.files.myImage.mv(uploadPath, (err) => {
