@@ -230,7 +230,6 @@ fetchData.deleteRecipe = recipeId => {
 
 // POST/upload one image
 fetchData.uploadImage = image => {
-  console.log('got here')
   const url = `${baseUrl}/images`;
   const formData = new FormData()
   formData.append('myImage', image)

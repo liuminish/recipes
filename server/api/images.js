@@ -6,7 +6,10 @@ const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
 const fileupload = require('express-fileupload');
-imagesRouter.use(fileupload())
+imagesRouter.use(fileupload());
+
+const readChunk = require('read-chunk');
+const imageType = require('image-type');
 
 // GET one image
 imagesRouter.get('/:name', (req, res, next) => {
@@ -30,7 +33,7 @@ imagesRouter.get('/:name', (req, res, next) => {
       })
 })
 
-// POST/add one image
+// POST/add one imagem
 imagesRouter.post('/', (req, res, next) => {
     const makeid = (length) => {
         let result = '';
@@ -42,9 +45,10 @@ imagesRouter.post('/', (req, res, next) => {
         return result;
      }
      
-    const fileType = req.files.myImage.type.split('.');
+    const buffer = readChunk.sync(req.files.myImage, 0, 12);
+    const fileType = imageType(buffer).ext;
 
-    const fileName = makeid(10) + '.' + fileType[1];
+    const fileName = makeid(10) + '.' + fileType;
     const uploadPath = path.resolve('images', fileName);
 
     req.files.myImage.mv(uploadPath, (err) => {

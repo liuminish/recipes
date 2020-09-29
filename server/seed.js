@@ -10,7 +10,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Recipes'", (
     
     if (table) {
         db.run(`INSERT INTO Recipes (name, image, time, servings, cuisine_type, meal_type, cooking_style, ingredients, instructions, notes) 
-        VALUES ('Prawns Glass Noodles', '', 60, 2, '3', '3', '1,3',
+        VALUES ('Prawns Glass Noodles', 'shrimp-glass-noodles.jpg', 60, 2, '3', '3', '1,3',
 
             '300-millilitre-water,
             1-teaspoon-sugar,
@@ -42,7 +42,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Recipes'", (
 
     if (table) {
         db.run(`INSERT INTO Recipes (name, image, time, servings, cuisine_type, meal_type, cooking_style, ingredients, instructions, notes) 
-        VALUES ('Chinese Steamed Egg', '', 13, 2, '1', '3', '1,5', 
+        VALUES ('Chinese Steamed Egg', 'chinese-steamed-egg.jpeg', 13, 2, '1', '3', '1,5', 
 
             '2-whole-egg,
             4-whole-eggshells filled with water,
@@ -67,7 +67,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Recipes'", (
 
     if (table) {
         db.run(`INSERT INTO Recipes (name, image, time, servings, cuisine_type, meal_type, cooking_style, ingredients, instructions, notes)
-            VALUES ('Shrimp Paste Chicken','', 13, 2, '1', '3', '3',
+            VALUES ('Shrimp Paste Chicken','shrimp-paste-chicken.jpeg', 13, 2, '1', '3', '3',
             
                 '500-gram-chicken wings,
                 4-whole-eggshells filled with water,
@@ -97,7 +97,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Recipes'", (
 
     if (table) {
         db.run(`INSERT INTO Recipes (name, image, time, servings, cuisine_type, meal_type, cooking_style, ingredients, instructions, notes)
-            VALUES ('Chinese Chicken and Mushroom Soup','', 150, 4, '1', '3', '1,2',
+            VALUES ('Chinese Chicken and Mushroom Soup','chicken-mushroom-soup.jpg', 150, 4, '1', '3', '1,2',
             
                 '10-whole-dried shitake mushrooms,
                 6-cup-water,
@@ -127,7 +127,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Recipes'", (
 
     if (table) {
         db.run(`INSERT INTO Recipes (name, image, time, servings, cuisine_type, meal_type, cooking_style, ingredients, instructions, notes)
-            VALUES ('Braised Mushroom and Pork Belly','', 30, 4, '1', '3', '1,2',
+            VALUES ('Braised Mushroom and Pork Belly','braised-pork-belly.jpg', 30, 4, '1', '3', '1,2',
             
                 '2-tablespoon-dark soy sauce,
                 2-tablespoon-light soy sauce,
@@ -156,7 +156,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Recipes'", (
 
     if (table) {
         db.run(`INSERT INTO Recipes (name, image, time, servings, cuisine_type, meal_type, cooking_style, ingredients, instructions, notes)
-            VALUES ('Cantonese Pork Knuckles with Ginger and Vinegar','', 180, 4, '1', '3', '1,2',
+            VALUES ('Cantonese Pork Knuckles with Ginger and Vinegar','pork-trotter-in-black-vinegar-and-ginger.jpg', 180, 4, '1', '3', '1,2',
             
                 '450-gram-ginger,
                 1200-millilitre-chinese sweet vinegar,
