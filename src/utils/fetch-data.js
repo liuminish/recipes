@@ -244,7 +244,7 @@ fetchData.uploadImage = image => {
       return new Promise(resolve => resolve(null));
     }
     return response.json().then(jsonResponse => {
-      return jsonResponse.path;
+      return jsonResponse.name;
     });
   });
   

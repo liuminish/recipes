@@ -415,17 +415,17 @@ class AddRecipe extends React.Component {
             alert('Sorry, only images are allowed.')
             return
         } else {
-            console.log('image type is', this.state.imageToPost.type)
-            console.log('uploading image')
             return fetchData.uploadImage(this.state.imageToPost).then(fileName => {
-                console.log('image name is', fileName)
                 this.setState({imageToPost: fileName})
+                console.log('image uploading done! image is', fileName)
             })
+            
         }
     }
 
     // function to convert data to database format and set state of recipe to post
     convertRecipe() {
+        console.log('start recipe conversion...')
         this.setState({isError: true})
         const {
             recipeName,
@@ -559,6 +559,19 @@ class AddRecipe extends React.Component {
 
     // function for updating of recipe
     async updateRecipe() {
+        const originalImageArray = this.props.currentRecipe.image.split('/');
+        const originalImageLength = originalImageArray.length - 1;
+        const originalImage = originalImageArray[originalImageLength];
+
+        if (this.state.imageToPost !== '') {
+            console.log('uploading new iamge...')
+            await this.uploadImage();
+        } else {
+            console.log('maintaining old image')
+            console.log(originalImage)
+            this.setState({imageToPost: originalImage})
+        }
+
         await this.convertRecipe();
         if (this.state.isError) {
             return;
