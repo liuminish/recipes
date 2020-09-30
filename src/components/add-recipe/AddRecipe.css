@@ -99,7 +99,6 @@
 }
 
 .add-recipe-image-container:hover > .add-recipe-image {
-    z-index: 0;
     opacity: 30%;
     cursor: pointer;
 }
@@ -113,6 +112,7 @@
 }
 
 .add-recipe-image-container:hover > .add-recipe-image-delete {
+    z-index: 1;
     cursor: pointer;
 }
 
