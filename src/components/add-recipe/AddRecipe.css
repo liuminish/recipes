@@ -85,8 +85,9 @@
 
 .add-recipe-image-container {
     margin-top: 10px;
-    max-width: 290px;
-    max-height: 200px;
+    width: 290px;
+    height: 200px;
+    object-fit: cover;
 }
 
 /* styles for container with checkboxes */

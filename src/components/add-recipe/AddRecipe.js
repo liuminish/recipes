@@ -642,7 +642,7 @@ class AddRecipe extends React.Component {
                             <input type="file" name="myImage" onChange={this.onImageChange} />
                             <div className="add-recipe-image-container">
                                 <img src={this.state.image} alt="upload" />
-                                </div>
+                            </div>
                         </div>
                     </div>
                     
