@@ -97,6 +97,8 @@ class AddRecipe extends React.Component {
         this.handleStyleCheckboxChange = this.handleStyleCheckboxChange.bind(this);
 
         this.uploadImage = this.uploadImage.bind(this);
+        this.deleteImage = this.deleteImage.bind(this);
+
         this.convertRecipe = this.convertRecipe.bind(this);
         this.addRecipe = this.addRecipe.bind(this);
         this.updateRecipe = this.updateRecipe.bind(this);
@@ -423,6 +425,15 @@ class AddRecipe extends React.Component {
         }
     }
 
+    // function to "delete" image
+    deleteImage() {
+        this.setState({
+            image: UploadLogo,
+            imageToPost: ''
+        })
+    }
+
+
     // function to convert data to database format and set state of recipe to post
     convertRecipe() {
         console.log('start recipe conversion...')
@@ -640,8 +651,9 @@ class AddRecipe extends React.Component {
                         </div>
                         <div className="add-recipe-value">
                             <input type="file" name="myImage" onChange={this.onImageChange} />
-                            <div className="add-recipe-image-container">
-                                <img src={this.state.image} alt="upload" />
+                            <div className="add-recipe-image-container" onClick={this.deleteImage}>
+                                <div className="add-recipe-image"><img src={this.state.image} alt="upload" /></div>
+                                <div className="add-recipe-image-delete"><RiDeleteBinLine /></div>
                             </div>
                         </div>
                     </div>
