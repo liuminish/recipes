@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(errorhandler());
+app.use('/images', express.static('images'));
 
 //mounting apiRouter
 const apiRouter = require('./api/api');

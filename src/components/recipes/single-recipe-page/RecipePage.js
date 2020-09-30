@@ -7,6 +7,13 @@ import { BiTime } from "react-icons/bi";
 import { Link, Redirect } from 'react-router-dom';
 import fetchData from '../../../utils/fetch-data';
 
+let baseUrl = '';
+if (window.location.hostname.includes('localhost')) {
+  baseUrl = 'http://localhost:4000/images/'
+} else {
+  baseUrl = 'https://api.recipes.liumin.dev/images/'
+};
+
 class RecipePage extends React.Component {
     constructor(props) {
         super(props);
@@ -55,7 +62,7 @@ class RecipePage extends React.Component {
 
                         <div className="recipe-page-part-one">
                             <div className="recipe-page-image-container">
-                                <img src={image} alt={name} />
+                                <img src={`${baseUrl}${image}`} alt={name} />
                             </div>
                             <div className="recipe-title-info">
                                 <h1>{name}</h1>
@@ -83,8 +90,7 @@ class RecipePage extends React.Component {
                                     </div>
                                 </div>
                                 <div className="recipe-information">
-                                    <p><BiTime /><span>&nbsp;&nbsp;</span>{time}<span>&nbsp;</span>minutes</p>
-                                    <p><RiTeamLine /><span>&nbsp;&nbsp;</span>{servings}<span>&nbsp;</span>servings</p>
+                                    <p><BiTime /><span>&nbsp;&nbsp;</span>{time}<span>&nbsp;</span>minutes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<RiTeamLine /><span>&nbsp;&nbsp;</span>{servings}<span>&nbsp;</span>servings</p>
                                     <p><RiStickyNoteLine /><span>&nbsp;&nbsp;</span>{notes}</p>
                                 </div>
                                 

@@ -58,12 +58,13 @@ class App extends React.Component {
 
   // requesting full info for one recipe
   getFullRecipe(recipeId) {
+    console.log('getting full recipe')
     fetchData.getRecipe(recipeId).then(recipe => {
 
       // setting default image if there is no image uploaded
       if (recipe.image === '') {
-          recipe.image = UploadLogo;
-      }
+        recipe.image = UploadLogo;
+      } 
 
       // changing cuisine types to array
       let cuisineList = recipe.cuisine_type.split(',');

@@ -10,28 +10,6 @@ imagesRouter.use(fileupload());
 
 const FileType = require('file-type');
 
-// GET one image
-imagesRouter.get('/:name', (req, res, next) => {
-
-    const options = {
-        root: path.resolve('images'),
-        dotfiles: 'deny',
-        headers: {
-          'x-timestamp': Date.now(),
-          'x-sent': true
-        }
-      }
-    
-      const fileName = req.params.name
-      res.sendFile(fileName, options, (err) => {
-        if (err) {
-          next(err)
-        } else {
-          res.status(200).send(fileName)
-        }
-      })
-})
-
 // POST/add one imagem
 imagesRouter.post('/', (req, res, next) => {
   // console.log('hiii')

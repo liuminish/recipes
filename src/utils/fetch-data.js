@@ -253,14 +253,12 @@ fetchData.uploadImage = image => {
 // GET one image
 fetchData.downloadImage = fileName => {
   const url = `${baseUrl}/images/${fileName}`;
-
   return fetch(url).then(response => {
     if (!response.ok) {
       return new Promise(resolve => resolve(null));
     }
-    return response.json().then(jsonResponse => {
-      return jsonResponse;
-    });
+
+    return response;
   });
   
 };
