@@ -100,6 +100,8 @@ class AddRecipe extends React.Component {
         this.convertRecipe = this.convertRecipe.bind(this);
         this.addRecipe = this.addRecipe.bind(this);
         this.updateRecipe = this.updateRecipe.bind(this);
+        this.clearRecipe = this.clearRecipe.bind(this);
+        this.toAllRecipes = this.toAllRecipes.bind(this)
 
     }
 
@@ -406,7 +408,7 @@ class AddRecipe extends React.Component {
     // function to upload image
     uploadImage() {
         const imageType = /image.*/;
-        
+
         if (!this.state.imageToPost) {
             this.setState({imageToPost: ''})
         } else if (!this.state.imageToPost.type.match(imageType)) {
@@ -558,7 +560,6 @@ class AddRecipe extends React.Component {
     // function for updating of recipe
     async updateRecipe() {
         await this.convertRecipe();
-        console.log(this.state.recipeToPost)
         if (this.state.isError) {
             return;
         } else {
@@ -567,6 +568,12 @@ class AddRecipe extends React.Component {
             this.props.resetModes();
             alert('Recipe updated.')
         }
+    }
+
+    // function to redirect to all recipes
+    toAllRecipes() {
+        this.props.resetModes();
+        this.setState({isRedirect: true})
     }
 
     componentWillUnmount() {
@@ -585,7 +592,7 @@ class AddRecipe extends React.Component {
             saveButton = 'Update Recipe';
             clearButton = 'Cancel Edit';
             saveOnclick = this.updateRecipe;
-            clearOnclick = null;
+            clearOnclick = this.toAllRecipes;
 
         } else if (this.state.isRedirect) {
             return <Redirect to={`/all-recipes`} />

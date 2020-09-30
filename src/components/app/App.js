@@ -22,6 +22,14 @@ import UploadLogo from '../../media/upload_logo.png';
 import { Switch, Route } from 'react-router-dom';
 import { RiLoader5Fill } from "react-icons/ri";
 
+// setting base url for retrieval of static images
+let baseUrl = '';
+if (window.location.hostname.includes('localhost')) {
+  baseUrl = 'http://localhost:4000/images/'
+} else {
+  baseUrl = 'https://api.recipes.liumin.dev/images/'
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -64,7 +72,9 @@ class App extends React.Component {
       // setting default image if there is no image uploaded
       if (recipe.image === '') {
         recipe.image = UploadLogo;
-      } 
+      } else {
+        recipe.image = baseUrl + recipe.image;
+      }
 
       // changing cuisine types to array
       let cuisineList = recipe.cuisine_type.split(',');
@@ -156,7 +166,7 @@ class App extends React.Component {
         if (recipe.image === '') {
           return recipe.image = UploadLogo;
         } else {
-          return null;
+          return recipe.image = baseUrl + recipe.image;;
         }
       })
 
@@ -376,7 +386,6 @@ class App extends React.Component {
 
   // change state when in edit mode
   isEditMode() {
-    console.log('edit!!')
     this.setState({isEdit: true})
   }
 

@@ -4,13 +4,6 @@ import './Recipe.css';
 import { Link } from 'react-router-dom';
 import { BiTime } from "react-icons/bi";
 
-let baseUrl = '';
-if (window.location.hostname.includes('localhost')) {
-  baseUrl = 'http://localhost:4000/images/'
-} else {
-  baseUrl = 'https://api.recipes.liumin.dev/images/'
-};
-
 class Recipe extends React.Component {
     render() {
         const { id, name, image, time, cuisineType, mealType, cookingStyle } = this.props.recipe
@@ -18,7 +11,7 @@ class Recipe extends React.Component {
         return (
             <div className="recipe-container">
                 <div className="image-container">
-                    <Link to={`recipe-page/${id}`}><img src={`${baseUrl}${image}`} recipeId={id} alt={name} /></Link>
+                    <Link to={`recipe-page/${id}`}><img src={image} recipeId={id} alt={name} /></Link>
                 </div>
                 <div className="recipe-quick-info">
                     <div className="recipe-quick-info-name">
