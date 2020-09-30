@@ -172,7 +172,6 @@ class App extends React.Component {
       // setting default image if there is no image uploaded
       allRecipes.map(recipe => {
         if (recipe.image === '') {
-          console.log('no images here!!')
           recipe.imageLink = UploadLogo;
           return recipe.image = '';
         } else {
@@ -268,9 +267,10 @@ class App extends React.Component {
       // setting default image if there is no image uploaded
       searchedRecipes.map(recipe => {
         if (recipe.image === '') {
-          return recipe.image = UploadLogo;
+          recipe.imageLink = UploadLogo;
+          return recipe.image = '';
         } else {
-          return null;
+          return recipe.imageLink = baseUrl + recipe.image;;
         }
       })
 
