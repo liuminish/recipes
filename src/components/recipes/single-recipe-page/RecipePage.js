@@ -18,6 +18,7 @@ class RecipePage extends React.Component {
     }
 
     async componentDidMount() {
+        this.props.hideMenuDisplay();
         this.setState({isFetching: true})
         const { params: { recipeId } } = this.props.match;
         await this.props.getFullRecipe(recipeId);
@@ -33,10 +34,6 @@ class RecipePage extends React.Component {
         } else {
             return;
         }
-    }
-
-    componentDidMount() {
-        this.props.hideMenuDisplay();
     }
 
     render() {
