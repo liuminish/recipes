@@ -108,7 +108,8 @@
     margin: 50px 100px;
     position: absolute;
     font-size: 100px;
-    color: grey;
+    opacity: 50%;
+    color: black;
 }
 
 .add-recipe-image-container:hover > .add-recipe-image-delete {

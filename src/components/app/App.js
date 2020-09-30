@@ -50,6 +50,9 @@ class App extends React.Component {
       isFetching: false,
       isEdit: false,
       isDuplicate: false,
+
+      displayCategory: false,
+      displayMenu: false
     };
 
     this.getFullRecipe = this.getFullRecipe.bind(this);
@@ -62,6 +65,10 @@ class App extends React.Component {
     this.isEditMode = this.isEditMode.bind(this);
     this.isDuplicateMode = this.isDuplicateMode.bind(this);
     this.resetModes = this.resetModes.bind(this);
+
+    this.changeMenuDisplay = this.changeMenuDisplay.bind(this);
+    this.changeCatDisplay = this.changeCatDisplay.bind(this);
+    this.hideMenuDisplay = this.hideMenuDisplay.bind(this)
   }
 
   // requesting full info for one recipe
@@ -401,6 +408,29 @@ class App extends React.Component {
       isDuplicate: false
     })
   }
+  
+  // change menu display
+  changeMenuDisplay() {
+    if (this.state.displayMenu) {
+        this.setState({ displayMenu: false, displayCategory: false})
+    } else {
+        this.setState({ displayMenu: true })
+    }
+  }
+
+  // hide menu display
+  hideMenuDisplay() {
+    this.setState({ displayMenu: false, displayCategory: false})
+  }
+
+  // change menu category display
+  changeCatDisplay() {
+    if (this.state.displayCategory) {
+        this.setState({ displayCategory: false })
+    } else {
+        this.setState({ displayCategory: true })
+    }
+  }
 
   render() {
     if (this.state.isFetching) {
@@ -414,10 +444,14 @@ class App extends React.Component {
       <div className="App">
 
         <Navibar 
+          cuisineTypes={this.state.cuisineTypes}
+          displayMenu={this.state.displayMenu}
+          displayCategory={this.state.displayCategory}
           changeAll={this.changeAll}
           changeCuisine={this.changeCuisine}
-          cuisineTypes={this.state.cuisineTypes}
           searchRecipes={this.searchRecipes}
+          changeMenuDisplay={this.changeMenuDisplay}
+          changeCatDisplay={this.changeCatDisplay}
         />
 
         <Switch>
@@ -427,6 +461,7 @@ class App extends React.Component {
               recipes={this.state.recipes}
               recipeTotal={this.state.recipeTotal}
               searchRecipes={this.searchRecipes}
+              hideMenuDisplay={this.hideMenuDisplay}
             />
           </Route>
 
@@ -435,6 +470,7 @@ class App extends React.Component {
               cuisine={this.state.cuisine} 
               recipes={this.state.recipes}
               getAllRecipes={this.getAllRecipes}
+              hideMenuDisplay={this.hideMenuDisplay}
             />
           </Route>
 
@@ -444,6 +480,7 @@ class App extends React.Component {
               getFullRecipe={this.getFullRecipe}
               isEditMode={this.isEditMode}
               isDuplicateMode={this.isDuplicateMode}
+              hideMenuDisplay={this.hideMenuDisplay}
             />
           </Route>
 
@@ -453,12 +490,14 @@ class App extends React.Component {
               mealTypes={this.state.mealTypes}
               cookingStyles={this.state.cookingStyles}
               searchRecipes={this.searchRecipes}
+              hideMenuDisplay={this.hideMenuDisplay}
             />
           </Route>
 
           <Route path='/search-by-ingre'>
             <SearchByIngre 
               searchRecipes={this.searchRecipes}
+              hideMenuDisplay={this.hideMenuDisplay}
             />
           </Route>
 
@@ -474,6 +513,7 @@ class App extends React.Component {
               isFetching={this.state.isFetching}
               getAllRecipes={this.getAllRecipes}
               resetModes={this.resetModes}
+              hideMenuDisplay={this.hideMenuDisplay}
             />
           </Route>
 
@@ -483,6 +523,7 @@ class App extends React.Component {
               searchedRecipes={this.state.searchedRecipes}
               searchTerm={this.state.searchTerm}
               isFetching={this.state.isFetching}
+              hideMenuDisplay={this.hideMenuDisplay}
             />
           </Route>
 

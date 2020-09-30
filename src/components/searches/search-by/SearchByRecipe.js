@@ -182,6 +182,10 @@ class SearchByRecipe extends React.Component {
         })
     }
 
+    componentDidMount() {
+        this.props.hideMenuDisplay();
+    }
+
     render() {
         //this controls whether "recipe" or "ingredient" tab is active
         let searchByRecipe = this.state.searchByRecipe ? 'active-search' : 'inactive-search';

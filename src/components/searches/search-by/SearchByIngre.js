@@ -162,6 +162,10 @@ class SearchByIngre extends React.Component {
         })
     }
 
+    componentDidMount() {
+        this.props.hideMenuDisplay();
+    }
+
     render() {
         // the following sets class for "recipe" or "ingre" tab, which affects css style
         let searchByRecipe = this.state.searchByRecipe ? 'active-search' : 'inactive-search';

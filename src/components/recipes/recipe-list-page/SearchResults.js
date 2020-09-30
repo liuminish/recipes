@@ -8,7 +8,11 @@ let searchHashTags = [];
 let searchStrikeOut = [];
 
 class AllRecipes extends React.Component {
-    componentDidMount() {        
+
+    componentDidMount() {  
+        
+        this.props.hideMenuDisplay();
+        
         searchHashTags = [];
         searchStrikeOut = [];
         searchHashTags.push(this.props.searchTerm.name);

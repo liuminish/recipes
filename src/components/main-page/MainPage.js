@@ -42,6 +42,10 @@ class Mainpage extends React.Component {
             return;
         }
     }
+
+    componentDidMount() {
+        this.props.hideMenuDisplay();
+    }
     
     render() {
         if (this.state.isRedirect) {

@@ -106,42 +106,6 @@ class AddRecipe extends React.Component {
         this.toAllRecipes = this.toAllRecipes.bind(this)
 
     }
-
-    // function to set input fields to current recipe (for duplicate/edit recipe buttons)
-    componentDidMount() {
-        if (this.props.isEdit || this.props.isDuplicate) {
-
-            let updatedMealTypes = {...this.state.mealTypes};
-            this.props.currentRecipe.mealType.map(type => {
-               return updatedMealTypes[type] = true
-            })
-
-            let updatedCuisineTypes = {...this.state.cuisineTypes};
-            this.props.currentRecipe.cuisineType.map(type => {
-               return updatedCuisineTypes[type] = true
-            })
-
-            let updatedCookingStyles = {...this.state.cookingStyles};
-            this.props.currentRecipe.cookingStyle.map(type => {
-               return updatedCookingStyles[type] = true
-            })
-
-            this.setState({
-                recipeName: this.props.currentRecipe.name,
-                recipeTime: this.props.currentRecipe.time,
-                recipeServings: this.props.currentRecipe.servings,
-                notes: this.props.currentRecipe.notes,
-                image: this.props.currentRecipe.image === ''? UploadLogo : this.props.currentRecipe.image,
-                mealTypes: updatedMealTypes,
-                cuisineTypes: updatedCuisineTypes,
-                cookingStyles: updatedCookingStyles,
-                addedIngreList: this.props.currentRecipe.ingredients,
-                instructionCount: this.props.currentRecipe.instructions.length + 1,
-                instructList: this.props.currentRecipe.instructions
-            })
-        }
-
-    }
     
     // function to control image upload
     onImageChange(event){
@@ -598,6 +562,44 @@ class AddRecipe extends React.Component {
     toAllRecipes() {
         this.props.resetModes();
         this.setState({isRedirect: true})
+    }
+
+    // function to set input fields to current recipe (for duplicate/edit recipe buttons)
+    componentDidMount() {
+        this.props.hideMenuDisplay();
+        
+        if (this.props.isEdit || this.props.isDuplicate) {
+
+            let updatedMealTypes = {...this.state.mealTypes};
+            this.props.currentRecipe.mealType.map(type => {
+               return updatedMealTypes[type] = true
+            })
+
+            let updatedCuisineTypes = {...this.state.cuisineTypes};
+            this.props.currentRecipe.cuisineType.map(type => {
+               return updatedCuisineTypes[type] = true
+            })
+
+            let updatedCookingStyles = {...this.state.cookingStyles};
+            this.props.currentRecipe.cookingStyle.map(type => {
+               return updatedCookingStyles[type] = true
+            })
+
+            this.setState({
+                recipeName: this.props.currentRecipe.name,
+                recipeTime: this.props.currentRecipe.time,
+                recipeServings: this.props.currentRecipe.servings,
+                notes: this.props.currentRecipe.notes,
+                image: this.props.currentRecipe.image === ''? UploadLogo : this.props.currentRecipe.image,
+                mealTypes: updatedMealTypes,
+                cuisineTypes: updatedCuisineTypes,
+                cookingStyles: updatedCookingStyles,
+                addedIngreList: this.props.currentRecipe.ingredients,
+                instructionCount: this.props.currentRecipe.instructions.length + 1,
+                instructList: this.props.currentRecipe.instructions
+            })
+        }
+
     }
 
     componentWillUnmount() {

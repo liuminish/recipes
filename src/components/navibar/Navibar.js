@@ -9,37 +9,15 @@ class Navibar extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            displayMenu: false,
-            displayCategory: false,
-
             searchValue: '',
             inputOpacity: false
         }
-
-        this.changeCatDisplay = this.changeCatDisplay.bind(this);
-        this.changeMenuDisplay = this.changeMenuDisplay.bind(this);
 
         this.updateSearchValue = this.updateSearchValue.bind(this);
         this.makeInputVisible = this.makeInputVisible.bind(this);
         this.makeInputInvisible = this.makeInputInvisible.bind(this);
         this.makeInputInvisible = this.makeInputInvisible.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
-    }
-
-    changeMenuDisplay() {
-        if (this.state.displayMenu) {
-            this.setState({ displayMenu: false, displayCategory: false, displayAdd: false })
-        } else {
-            this.setState({ displayMenu: true })
-        }
-    }
-
-    changeCatDisplay() {
-        if (this.state.displayCategory) {
-            this.setState({ displayCategory: false })
-        } else {
-            this.setState({ displayCategory: true })
-        }
     }
 
     makeInputVisible() {
@@ -68,7 +46,7 @@ class Navibar extends React.Component {
     
     render() {
         // this controls display status of full menu
-        let displayCategory = { display: this.state.displayCategory ? 'block' : 'none' };
+        let displayCategory = { display: this.props.displayCategory ? 'block' : 'none' };
         const cuisineList = this.props.cuisineTypes.map(cuisine => {
             return cuisine.type
         })
@@ -81,7 +59,7 @@ class Navibar extends React.Component {
             <div>
                 <div className="navi-bar" >
                    
-                    <div className="menu-icon" onClick={this.changeMenuDisplay}>
+                    <div className="menu-icon" onClick={this.props.changeMenuDisplay}>
                         <RiMenu5Line className="link-color-unchanged" />
                     </div>
 
@@ -95,8 +73,8 @@ class Navibar extends React.Component {
                     </div> 
 
                 </div>
-                <div className="menu" style={{ display: this.state.displayMenu ? 'block' : 'none' }}>
-                    <p className="link" id="main-menu-item" onClick={this.changeCatDisplay}><Link to='/all-recipes'><BiFoodMenu />Recipes</Link></p>
+                <div className="menu" style={{ display: this.props.displayMenu ? 'block' : 'none' }}>
+                    <p className="link" id="main-menu-item" onClick={this.props.changeCatDisplay}><Link to='/all-recipes'><BiFoodMenu />Recipes</Link></p>
                     <Link to="/all-recipes"><p className="link" id="category" style={displayCategory} onClick={this.props.changeAll}>All</p></Link>
                     {cuisineList.map(type => {
                         const displayName = type.charAt(0).toUpperCase() + type.slice(1);

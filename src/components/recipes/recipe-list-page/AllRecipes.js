@@ -13,6 +13,8 @@ class AllRecipes extends React.Component {
     }
 
     async componentDidMount() {
+        this.props.hideMenuDisplay();
+        
         this.setState({isFetching: true});
         await this.props.getAllRecipes();
         this.setState({isFetching: false})

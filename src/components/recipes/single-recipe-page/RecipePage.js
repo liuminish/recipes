@@ -35,6 +35,10 @@ class RecipePage extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.props.hideMenuDisplay();
+    }
+
     render() {
         if (this.state.isFetching || !this.props.currentRecipe.ingredients) {
             return <RiLoader5Fill />
