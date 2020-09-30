@@ -42,7 +42,7 @@ class RecipePage extends React.Component {
         } else if (this.state.redirect) {
             return <Redirect to='/all-recipes' />
         } else {
-            const { name, image, time, servings, ingredients, instructions, mealType, cuisineType, cookingStyle, notes } = this.props.currentRecipe;
+            const { name, imageLink, time, servings, ingredients, instructions, mealType, cuisineType, cookingStyle, notes } = this.props.currentRecipe;
             const ingredientsList = ingredients.map(ingredient => {
                 return <li key={ingredient.id}>{ingredient.amount}<span>&nbsp;</span>{ingredient.unit}<span>&nbsp;</span>{ingredient.ingredient}</li>
             });
@@ -56,7 +56,7 @@ class RecipePage extends React.Component {
 
                         <div className="recipe-page-part-one">
                             <div className="recipe-page-image-container">
-                                <img src={image} alt={name} />
+                                <img src={imageLink} alt={name} />
                             </div>
                             <div className="recipe-title-info">
                                 <h1>{name}</h1>

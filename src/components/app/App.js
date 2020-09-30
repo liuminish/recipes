@@ -78,9 +78,10 @@ class App extends React.Component {
 
       // setting default image if there is no image uploaded
       if (recipe.image === '') {
-        recipe.image = UploadLogo;
+        recipe.imageLink = UploadLogo;
+        recipe.image = '';
       } else {
-        recipe.image = baseUrl + recipe.image;
+        recipe.imageLink = baseUrl + recipe.image;
       }
 
       // changing cuisine types to array
@@ -171,9 +172,11 @@ class App extends React.Component {
       // setting default image if there is no image uploaded
       allRecipes.map(recipe => {
         if (recipe.image === '') {
-          return recipe.image = UploadLogo;
+          console.log('no images here!!')
+          recipe.imageLink = UploadLogo;
+          return recipe.image = '';
         } else {
-          return recipe.image = baseUrl + recipe.image;;
+          return recipe.imageLink = baseUrl + recipe.image;;
         }
       })
 

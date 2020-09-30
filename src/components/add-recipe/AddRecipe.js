@@ -4,6 +4,7 @@ import './AddRecipe.css';
 import Checkbox from '../../utils/checkbox';
 import { ItemizedListExtended, ItemizedListNoDelete } from '../../utils/itemized-list';
 import fetchData from '../../utils/fetch-data';
+import { Modal } from '../../utils/modal';
 
 import { RiAddLine, RiDeleteBinLine, RiArrowUpCircleLine, RiArrowDownCircleLine, RiEdit2Line, RiLoader5Fill } from "react-icons/ri";
 import { Redirect } from 'react-router-dom';
@@ -40,7 +41,8 @@ class AddRecipe extends React.Component {
             recipeTime: '',
             recipeServings: '',
             notes: '',
-            image: UploadLogo,
+            imageLink: UploadLogo,
+            image: '',
 
             // below state handles redirect/error state of page
             isRedirect: false,
@@ -66,9 +68,10 @@ class AddRecipe extends React.Component {
             instructList: [],
 
             // below state stores current recipe to post
-            imageToPost: '',
-            recipeToPost: {}
+            recipeToPost: {},
 
+            displayModal: false,
+            modalContent: ''
         }
 
         this.onImageChange = this.onImageChange.bind(this);
@@ -103,7 +106,9 @@ class AddRecipe extends React.Component {
         this.addRecipe = this.addRecipe.bind(this);
         this.updateRecipe = this.updateRecipe.bind(this);
         this.clearRecipe = this.clearRecipe.bind(this);
-        this.toAllRecipes = this.toAllRecipes.bind(this)
+        this.toAllRecipes = this.toAllRecipes.bind(this);
+
+        this.changeModalDisplay = this.changeModalDisplay.bind(this)
 
     }
     
@@ -112,8 +117,8 @@ class AddRecipe extends React.Component {
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
             this.setState({
-              image: URL.createObjectURL(img),
-              imageToPost: img
+              imageLink: URL.createObjectURL(img),
+              image: img
             });
         }
     }
@@ -375,25 +380,27 @@ class AddRecipe extends React.Component {
     uploadImage() {
         const imageType = /image.*/;
 
-        if (!this.state.imageToPost) {
-            this.setState({imageToPost: ''})
-        } else if (!this.state.imageToPost.type.match(imageType)) {
+        if (this.state.image === '') {
+            return
+        } else if (!this.state.image.type) {
+            return
+        } else if (!this.state.image.type.match(imageType)) {
             alert('Sorry, only images are allowed.')
             return
         } else {
-            return fetchData.uploadImage(this.state.imageToPost).then(fileName => {
-                this.setState({imageToPost: fileName})
+            return fetchData.uploadImage(this.state.image).then(fileName => {
+                this.setState({image: fileName})
                 console.log('image uploading done! image is', fileName)
             })
-            
         }
+
     }
 
     // function to "delete" image
     deleteImage() {
         this.setState({
-            image: UploadLogo,
-            imageToPost: ''
+            imageLink: UploadLogo,
+            image: ''
         })
     }
 
@@ -407,7 +414,7 @@ class AddRecipe extends React.Component {
             recipeTime,
             recipeServings,
             notes,
-            imageToPost,
+            image,
             mealTypes,
             cuisineTypes,
             cookingStyles,
@@ -475,7 +482,7 @@ class AddRecipe extends React.Component {
         const recipeToPost = {
             id: this.props.isEdit ? this.props.currentRecipe.id : null,
             name: recipeName,
-            image: imageToPost,
+            image: image,
             time: recipeTime,
             servings: recipeServings,
             cuisineTypes: convertedCuisineTypes.toString(),
@@ -504,9 +511,11 @@ class AddRecipe extends React.Component {
             return;
         } else {
             await fetchData.createRecipe(this.state.recipeToPost);
-            this.setState({isRedirect: true})
+            this.setState({
+                modalContent: 'Recipe created.'
+            })
+            this.changeModalDisplay();
             this.props.resetModes();
-            alert('Recipe created.')
         }
         
     }
@@ -518,7 +527,8 @@ class AddRecipe extends React.Component {
             recipeTime: '',
             recipeServings: '',
             notes: '',
-            image: UploadLogo,
+            imageLink: UploadLogo,
+            image: '',
             mealTypes: reduceArray(this.props.mealTypes),
             cuisineTypes: reduceArray(this.props.cuisineTypes),
             cookingStyles: reduceArray(this.props.cookingStyles),
@@ -534,27 +544,18 @@ class AddRecipe extends React.Component {
 
     // function for updating of recipe
     async updateRecipe() {
-        const originalImageArray = this.props.currentRecipe.image.split('/');
-        const originalImageLength = originalImageArray.length - 1;
-        const originalImage = originalImageArray[originalImageLength];
 
-        if (this.state.imageToPost !== '') {
-            console.log('uploading new iamge...')
-            await this.uploadImage();
-        } else {
-            console.log('maintaining old image')
-            console.log(originalImage)
-            this.setState({imageToPost: originalImage})
-        }
-
+        await this.uploadImage();
         await this.convertRecipe();
         if (this.state.isError) {
             return;
         } else {
             await fetchData.updateRecipe(this.state.recipeToPost);
-            this.setState({isRedirect: true})
+            this.setState({
+                modalContent: 'Recipe updated.'
+            });
+            this.changeModalDisplay();
             this.props.resetModes();
-            alert('Recipe updated.')
         }
     }
 
@@ -562,6 +563,19 @@ class AddRecipe extends React.Component {
     toAllRecipes() {
         this.props.resetModes();
         this.setState({isRedirect: true})
+    }
+
+    // function to close modal
+    changeModalDisplay() {
+        if (this.state.displayModal) {
+            this.setState({
+                displayModal: false,
+                isRedirect: true
+            })
+        } else {
+            this.setState({displayModal: true})
+        }
+        
     }
 
     // function to set input fields to current recipe (for duplicate/edit recipe buttons)
@@ -590,7 +604,8 @@ class AddRecipe extends React.Component {
                 recipeTime: this.props.currentRecipe.time,
                 recipeServings: this.props.currentRecipe.servings,
                 notes: this.props.currentRecipe.notes,
-                image: this.props.currentRecipe.image === ''? UploadLogo : this.props.currentRecipe.image,
+                imageLink: this.props.currentRecipe.imageLink === ''? UploadLogo : this.props.currentRecipe.imageLink,
+                image: this.props.currentRecipe.image === ''? '' : this.props.currentRecipe.image,
                 mealTypes: updatedMealTypes,
                 cuisineTypes: updatedCuisineTypes,
                 cookingStyles: updatedCookingStyles,
@@ -631,183 +646,190 @@ class AddRecipe extends React.Component {
         }
 
         return (
-            <div className="add-recipe-main-container">
+            <div>
+                <Modal 
+                        displayModal={this.state.displayModal}
+                        handleClose={this.changeModalDisplay}
+                        modalContent={this.state.modalContent}
+                    />
+                <div className="add-recipe-main-container">
 
-                <h1>{displayHeader}Recipe</h1>
+                    <h1>{displayHeader}Recipe</h1>
 
-                {/* renders name field */}
-                <div className="add-recipe-secondary-container">
-                    <div className="add-recipe-individual-row">
-                        <div className="add-recipe-key">
-                            Recipe Name:
-                        </div>
-                        <div className="add-recipe-value">
-                            <input type="text" value={this.state.recipeName} onChange={this.changeRecipeName} />
-                        </div>
-                    </div>
-
-                    {/* renders photo upload field */}
-                    <div className="add-recipe-individual-row">
-                        <div className="add-recipe-key">
-                            Photo:
-                        </div>
-                        <div className="add-recipe-value">
-                            <input type="file" name="myImage" onChange={this.onImageChange} />
-                            <div className="add-recipe-image-container" onClick={this.deleteImage}>
-                                <div className="add-recipe-image"><img src={this.state.image} alt="upload" /></div>
-                                <div className="add-recipe-image-delete"><RiDeleteBinLine /></div>
+                    {/* renders name field */}
+                    <div className="add-recipe-secondary-container">
+                        <div className="add-recipe-individual-row">
+                            <div className="add-recipe-key">
+                                Recipe Name:
+                            </div>
+                            <div className="add-recipe-value">
+                                <input type="text" value={this.state.recipeName} onChange={this.changeRecipeName} />
                             </div>
                         </div>
-                    </div>
-                    
-                    <div className="add-recipe-divider"></div>
 
-                    {/* renders checkboxes selection */}
-                    <div className="add-recipe-individual-row">
-                        <div className="add-recipe-main-checkbox-container">
-                            <div className="add-recipe-checkbox-container">
-                                <p>Cuisine Type</p>
-                                <p className="add-recipe-checkbox">
-                                    {this.props.cuisineTypes.map(option => {
-                                    return <Checkbox className="add-recipe-checkbox" label={option.type} key={option.type} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option.type]} />
-                                    })}
-                                </p>
+                        {/* renders photo upload field */}
+                        <div className="add-recipe-individual-row">
+                            <div className="add-recipe-key">
+                                Photo:
                             </div>
-                            <div className="add-recipe-checkbox-container">
-                                <p>Meal Type</p>
-                                <p className="add-recipe-checkbox">
-                                    {this.props.mealTypes.map(option => {
-                                    return <Checkbox label={option.type} key={option.type} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option.type]} />
-                                    })}
-                                </p>
-                            </div>
-                            <div className="add-recipe-checkbox-container">
-                                <p>Cooking Style</p>
-                                <p className="add-recipe-checkbox">
-                                    {this.props.cookingStyles.map(option => {
-                                    return <Checkbox className="add-recipe-checkbox" key={option.type} label={option.type} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option.type]} />
-                                    })}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="add-recipe-divider"></div>
-
-                    {/* renders time and servings field */}
-                    <div className="add-recipe-individual-row">
-                        <div className="add-recipe-key">
-                            Time needed:
-                        </div>
-                        <div className="add-recipe-value">
-                            <input type="number" value={this.state.recipeTime} onChange={this.changeRecipeTime} />
-                            minutes
-                        </div>
-                    </div>
-
-                    <div className="add-recipe-individual-row">
-                        <div className="add-recipe-key">
-                            Servings:
-                        </div>
-                        <div className="add-recipe-value">
-                            <input type="number" value={this.state.recipeServings} onChange={this.changeRecipeServings} />
-                            servings
-                        </div>
-                    </div>
-
-                    <div className="add-recipe-divider"></div>
-
-                    {/* renders ingredients field */}
-                    <div className="add-recipe-individual-row">
-                        <div className="add-recipe-key">
-                            Ingredients:
-                        </div>
-                        <div className="add-recipe-ingre-container">
-                            <div className="add-recipe-new-ingre" onKeyPress={this.addIngre}>
-                                <input type="number" value={this.state.currentIngreAmount} onChange={this.changeIngreAmount} />
-                                <select value={this.state.currentIngreUnit} onChange={this.changeIngreUnit}>
-                                    {this.state.units.map(unit => {
-                                        return <option value={unit} key={unit}>{unit}</option>
-                                    })}
-                                </select>
-                                <input type="text" value={this.state.currentIngre} onChange={this.changeIngre} />
-                                <RiAddLine id="add-button" onClick={() => this.addIngre({key: "Enter"})}/>
-                            </div>
-                            <div className="add-recipe-ingre-list">
-                                {this.state.addedIngreList.map(ingredient => {
-                                    return (<div className="add-recipe-ingre-list-item">
-                                        <div><ItemizedListExtended item={ingredient} key={ingredient} /></div>
-                                        <div className="add-recipe-ingre-icon"><RiEdit2Line onClick={() => this.editIngre(ingredient)}/></div>
-                                        <div className="add-recipe-ingre-icon"><RiDeleteBinLine onClick={() => this.deleteIngre(ingredient)}/></div>
-                                    </div>)
-                                })}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="add-recipe-divider"></div>
-
-                    {/* renders instructions field */}
-                    <div className="add-recipe-individual-row">
-                        <div className="add-recipe-instructions-key">
-                            Instructions:
-                        </div>
-                        <div className="add-recipe-instructions">
-
-                            <div className="add-recipe-instructions-list-container">
-                                {this.state.instructList.map(instruction => {
-                                    return (
-                                    <div className="add-recipe-instructions-list-row">
-                                        <div className="add-recipe-instruction-number">
-                                            {this.state.instructList.findIndex(item => item === instruction) + 1}
-                                        </div>
-                                        <div className="add-recipe-instruction-item">
-                                        <ItemizedListNoDelete item={instruction} />
-                                        </div>
-                                        <div className="add-recipe-edit-instruction">
-                                            <RiEdit2Line className="add-recipe-edit-button" onClick={() => this.editInstruct(instruction)}/>
-                                            <RiDeleteBinLine className="add-recipe-edit-button" onClick={() => this.deleteInstruct(instruction)}/>
-                                            <RiArrowUpCircleLine className="add-recipe-edit-button" onClick={() => this.moveInstructUp(instruction)}/>
-                                            <RiArrowDownCircleLine className="add-recipe-edit-button" onClick={() => this.moveInstructDown(instruction)}/>
-                                        </div>
-                                    </div>)
-                                })} 
-                            </div>
-
-                            <div className="add-recipe-new-instructions">
-                                <div className="add-recipe-instruction-number">
-                                    {this.state.instructionCount}
+                            <div className="add-recipe-value">
+                                <input type="file" name="myImage" onChange={this.onImageChange} />
+                                <div className="add-recipe-image-container" onClick={this.deleteImage}>
+                                    <div className="add-recipe-image"><img src={this.state.imageLink} alt="upload" /></div>
+                                    <div className="add-recipe-image-delete"><RiDeleteBinLine /></div>
                                 </div>
-                                <textarea value={this.state.currentInstruct} onChange={this.changeInstruct} onKeyPress={this.addInstruct} />
-                                <RiAddLine id="add-button" onClick={() => this.addInstruct({key: "Enter"})}/>
                             </div>
-
                         </div>
+                        
+                        <div className="add-recipe-divider"></div>
+
+                        {/* renders checkboxes selection */}
+                        <div className="add-recipe-individual-row">
+                            <div className="add-recipe-main-checkbox-container">
+                                <div className="add-recipe-checkbox-container">
+                                    <p>Cuisine Type</p>
+                                    <p className="add-recipe-checkbox">
+                                        {this.props.cuisineTypes.map(option => {
+                                        return <Checkbox className="add-recipe-checkbox" label={option.type} key={option.type} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option.type]} />
+                                        })}
+                                    </p>
+                                </div>
+                                <div className="add-recipe-checkbox-container">
+                                    <p>Meal Type</p>
+                                    <p className="add-recipe-checkbox">
+                                        {this.props.mealTypes.map(option => {
+                                        return <Checkbox label={option.type} key={option.type} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option.type]} />
+                                        })}
+                                    </p>
+                                </div>
+                                <div className="add-recipe-checkbox-container">
+                                    <p>Cooking Style</p>
+                                    <p className="add-recipe-checkbox">
+                                        {this.props.cookingStyles.map(option => {
+                                        return <Checkbox className="add-recipe-checkbox" key={option.type} label={option.type} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option.type]} />
+                                        })}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="add-recipe-divider"></div>
+
+                        {/* renders time and servings field */}
+                        <div className="add-recipe-individual-row">
+                            <div className="add-recipe-key">
+                                Time needed:
+                            </div>
+                            <div className="add-recipe-value">
+                                <input type="number" value={this.state.recipeTime} onChange={this.changeRecipeTime} />
+                                minutes
+                            </div>
+                        </div>
+
+                        <div className="add-recipe-individual-row">
+                            <div className="add-recipe-key">
+                                Servings:
+                            </div>
+                            <div className="add-recipe-value">
+                                <input type="number" value={this.state.recipeServings} onChange={this.changeRecipeServings} />
+                                servings
+                            </div>
+                        </div>
+
+                        <div className="add-recipe-divider"></div>
+
+                        {/* renders ingredients field */}
+                        <div className="add-recipe-individual-row">
+                            <div className="add-recipe-key">
+                                Ingredients:
+                            </div>
+                            <div className="add-recipe-ingre-container">
+                                <div className="add-recipe-new-ingre" onKeyPress={this.addIngre}>
+                                    <input type="number" value={this.state.currentIngreAmount} onChange={this.changeIngreAmount} />
+                                    <select value={this.state.currentIngreUnit} onChange={this.changeIngreUnit}>
+                                        {this.state.units.map(unit => {
+                                            return <option value={unit} key={unit}>{unit}</option>
+                                        })}
+                                    </select>
+                                    <input type="text" value={this.state.currentIngre} onChange={this.changeIngre} />
+                                    <RiAddLine id="add-button" onClick={() => this.addIngre({key: "Enter"})}/>
+                                </div>
+                                <div className="add-recipe-ingre-list">
+                                    {this.state.addedIngreList.map(ingredient => {
+                                        return (<div className="add-recipe-ingre-list-item">
+                                            <div><ItemizedListExtended item={ingredient} key={ingredient} /></div>
+                                            <div className="add-recipe-ingre-icon"><RiEdit2Line onClick={() => this.editIngre(ingredient)}/></div>
+                                            <div className="add-recipe-ingre-icon"><RiDeleteBinLine onClick={() => this.deleteIngre(ingredient)}/></div>
+                                        </div>)
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="add-recipe-divider"></div>
+
+                        {/* renders instructions field */}
+                        <div className="add-recipe-individual-row">
+                            <div className="add-recipe-instructions-key">
+                                Instructions:
+                            </div>
+                            <div className="add-recipe-instructions">
+
+                                <div className="add-recipe-instructions-list-container">
+                                    {this.state.instructList.map(instruction => {
+                                        return (
+                                        <div className="add-recipe-instructions-list-row">
+                                            <div className="add-recipe-instruction-number">
+                                                {this.state.instructList.findIndex(item => item === instruction) + 1}
+                                            </div>
+                                            <div className="add-recipe-instruction-item">
+                                            <ItemizedListNoDelete item={instruction} />
+                                            </div>
+                                            <div className="add-recipe-edit-instruction">
+                                                <RiEdit2Line className="add-recipe-edit-button" onClick={() => this.editInstruct(instruction)}/>
+                                                <RiDeleteBinLine className="add-recipe-edit-button" onClick={() => this.deleteInstruct(instruction)}/>
+                                                <RiArrowUpCircleLine className="add-recipe-edit-button" onClick={() => this.moveInstructUp(instruction)}/>
+                                                <RiArrowDownCircleLine className="add-recipe-edit-button" onClick={() => this.moveInstructDown(instruction)}/>
+                                            </div>
+                                        </div>)
+                                    })} 
+                                </div>
+
+                                <div className="add-recipe-new-instructions">
+                                    <div className="add-recipe-instruction-number">
+                                        {this.state.instructionCount}
+                                    </div>
+                                    <textarea value={this.state.currentInstruct} onChange={this.changeInstruct} onKeyPress={this.addInstruct} />
+                                    <RiAddLine id="add-button" onClick={() => this.addInstruct({key: "Enter"})}/>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div className="add-recipe-divider"></div>
+
+                        {/* renders notes field */}
+                        <div className="add-recipe-individual-row">
+                            <div className="add-recipe-key">
+                                Notes:
+                            </div>
+                            <div className="add-recipe-value">
+                                <textarea value={this.state.notes} onChange={this.changeNotes} />
+                            </div>
+                        </div>
+
                     </div>
 
                     <div className="add-recipe-divider"></div>
 
-                    {/* renders notes field */}
-                    <div className="add-recipe-individual-row">
-                        <div className="add-recipe-key">
-                            Notes:
+                    {/* renders buttons to save or clear recipe */}
+                    <div className="add-recipe-form-button-container">
+                        <div className="add-recipe-form-button" onClick={saveOnclick}>
+                            {saveButton}
                         </div>
-                        <div className="add-recipe-value">
-                            <textarea value={this.state.notes} onChange={this.changeNotes} />
+                        <div className="add-recipe-form-button" onClick={clearOnclick}>
+                            {clearButton}
                         </div>
-                    </div>
-
-                </div>
-
-                <div className="add-recipe-divider"></div>
-
-                {/* renders buttons to save or clear recipe */}
-                <div className="add-recipe-form-button-container">
-                    <div className="add-recipe-form-button" onClick={saveOnclick}>
-                        {saveButton}
-                    </div>
-                    <div className="add-recipe-form-button" onClick={clearOnclick}>
-                        {clearButton}
                     </div>
                 </div>
             </div>

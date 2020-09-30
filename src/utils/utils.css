@@ -14,3 +14,29 @@
     cursor: pointer;
     opacity: 0.5;
 }
+
+
+/* style for modal */
+.modal-main {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+  
+.modal-content {
+    z-index: 2;
+    position: fixed;
+    background: #f77f00;
+    width: 20%;
+    height: 10%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: white;
+    font-size: 20px;
+    border: 1px solid white;
+    border-radius: 5px;
+}
