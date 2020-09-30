@@ -76,7 +76,7 @@ h2 {
 .recipe-information p {
     display: flex;
     align-items: top;
-    padding: 2px;
+    padding: 5px;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -141,14 +141,14 @@ h2 {
 }
 
 .ingredients-list {
-    margin: 0px 20px;
+    margin: 0px 15px;
     width: 30%;
     text-align: left;
     border-radius: 5px;
 }
 
 .preparation-list {
-    margin: 0px 20px;
+    margin: 0px 15px;
     padding-right: 15px;
     width: 70%;
     text-align: left;
@@ -156,7 +156,7 @@ h2 {
 }
 
 ul, ol {
-    padding-left: 20px;
+    padding-left: 15px;
 }
 
 ul li {

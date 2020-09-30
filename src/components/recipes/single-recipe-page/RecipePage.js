@@ -91,7 +91,7 @@ class RecipePage extends React.Component {
                                 </div>
                                 <div className="recipe-information">
                                     <p><BiTime /><span>&nbsp;&nbsp;</span>{time}<span>&nbsp;</span>minutes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<RiTeamLine /><span>&nbsp;&nbsp;</span>{servings}<span>&nbsp;</span>servings</p>
-                                    <p><RiStickyNoteLine /><span>&nbsp;&nbsp;</span>{notes}</p>
+                                    <p><span><RiStickyNoteLine /></span><span>&nbsp;&nbsp;</span>{notes}</p>
                                 </div>
                                 
                                     
