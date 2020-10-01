@@ -77,7 +77,7 @@
     }
 }
 
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 560px) {
     .active-search, .inactive-search {
         font-size: 20px;
     }

@@ -4,9 +4,9 @@ import './SearchBy.css';
 import { Link, Redirect } from 'react-router-dom';
 
 import { BiFoodMenu } from "react-icons/bi";
-import { RiShoppingBasket2Line } from "react-icons/ri";
+import { RiShoppingBasket2Line, RiErrorWarningLine } from "react-icons/ri";
 
-
+import { Modal } from '../../../utils/modal';
 import Checkbox from '../../../utils/checkbox';
 
 // function for manipulation of cuisine, meal and cooking type states into arrays
@@ -49,7 +49,14 @@ class SearchByRecipe extends React.Component {
             cookingStyles: reduceArray(this.props.cookingStyles),
 
             //below states will change based on form input
-            searchValue: ''
+            searchValue: '',
+
+            // state relating to modal
+            modalIcon: <RiErrorWarningLine />,
+            modalTitle: 'Warning',
+            modalContent: '',
+            modalButton: 'okay',
+            displayModal: false
         }
 
         this.updateSearchValue = this.updateSearchValue.bind(this);
@@ -59,6 +66,8 @@ class SearchByRecipe extends React.Component {
         this.handleStyleCheckboxChange = this.handleStyleCheckboxChange.bind(this);
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+
+        this.hideModal = this.hideModal.bind(this)
     }
 
     // state changes relating to main search bar
@@ -152,7 +161,10 @@ class SearchByRecipe extends React.Component {
 
         // checks if filters are chosen
         if (chosenMealTypes.length <= 0 || chosenCuisineTypes <= 0 || chosenStyleTypes <= 0) {
-            alert('Please choose at least one filter for each category.');
+            this.setState({
+                modalContent: 'Please choose at least one filter for each category.',
+                displayModal: true
+            });
             return;
         }
 
@@ -182,6 +194,11 @@ class SearchByRecipe extends React.Component {
         })
     }
 
+    // function to hide modal
+    hideModal() {
+        this.setState({displayModal: false})
+    }
+
     componentDidMount() {
         this.props.hideMenuDisplay();
     }
@@ -199,52 +216,62 @@ class SearchByRecipe extends React.Component {
             return <Redirect to={`/search-results`} />
         } else {
             return (
-                <div className="advanced-search-main">
-                    <form onSubmit={this.handleFormSubmit}>
-                        <h1>Advanced Search</h1>
-        
-                        {/* the below renders the main search bar + recipe/ingredient tabs */}
-        
-                        <div className="advanced-search-bar">
-                            <div>
-                                <input className='advanced-search-input' type="text" value={this.state.searchValue} onChange={this.updateSearchValue} />
-                                <div className='search-by'>
-                                    <div className={searchByRecipe} id="link"><BiFoodMenu /><span className="search-by-words">Search by</span>&nbsp;Recipe</div>
-                                    <Link to="/search-by-ingre"><div className={searchByIngre} id="link"><RiShoppingBasket2Line /><span className="search-by-words">Search by</span>&nbsp;Ingredients</div></Link>
+                <div>
+                    <Modal 
+                        displayModal={this.state.displayModal}
+                        handleClose={this.hideModal}
+                        modalIcon={this.state.modalIcon}
+                        modalTitle={this.state.modalTitle}
+                        modalContent={this.state.modalContent}
+                        modalButton={this.state.modalButton}
+                    />
+                    <div className="advanced-search-main">
+                        <form onSubmit={this.handleFormSubmit}>
+                            <h1>Advanced Search</h1>
+            
+                            {/* the below renders the main search bar + recipe/ingredient tabs */}
+            
+                            <div className="advanced-search-bar">
+                                <div>
+                                    <input className='advanced-search-input' type="text" value={this.state.searchValue} onChange={this.updateSearchValue} />
+                                    <div className='search-by'>
+                                        <div className={searchByRecipe} id="link"><BiFoodMenu /><span className="search-by-words">Search by</span>&nbsp;Recipe</div>
+                                        <Link to="/search-by-ingre"><div className={searchByIngre} id="link"><RiShoppingBasket2Line /><span className="search-by-words">Search by</span>&nbsp;Ingredients</div></Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-        
-                        {/* the below renders the checkboxes */}
-        
-                        <div className="search-by-container">
-        
-                            <div className="search-by-detailed">
-                                <h3>Cuisine Type</h3>
-                                {cuisineOptions.map(option => {
-                                    return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option]} />
-                                })}
-                            </div>  
-        
-                            <div className="search-by-detailed">
-                                <h3>Meal Type</h3>
-                                {mealOptions.map(option => {
-                                    return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option]} />
-                                })}
-                            </div>
-                            
-                            <div className="search-by-detailed">
-                                <h3>Cooking Style</h3>
-                                {styleOptions.map(option => {
-                                    return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option]} />
-                                })}
-                            </div>  
+            
+                            {/* the below renders the checkboxes */}
+            
+                            <div className="search-by-container">
+            
+                                <div className="search-by-detailed">
+                                    <h3>Cuisine Type</h3>
+                                    {cuisineOptions.map(option => {
+                                        return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option]} />
+                                    })}
+                                </div>  
+            
+                                <div className="search-by-detailed">
+                                    <h3>Meal Type</h3>
+                                    {mealOptions.map(option => {
+                                        return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option]} />
+                                    })}
+                                </div>
                                 
-                        </div>
-                        <div className="advanced-search-button" onClick={this.handleFormSubmit}>
-                            Advanced Search
-                        </div>
-                    </form>
+                                <div className="search-by-detailed">
+                                    <h3>Cooking Style</h3>
+                                    {styleOptions.map(option => {
+                                        return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option]} />
+                                    })}
+                                </div>  
+                                    
+                            </div>
+                            <div className="advanced-search-button" onClick={this.handleFormSubmit}>
+                                Advanced Search
+                            </div>
+                        </form>
+                    </div>
                 </div>
             )
         }

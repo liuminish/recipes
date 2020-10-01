@@ -72,6 +72,7 @@ class AddRecipe extends React.Component {
             // below state stores current recipe to post
             recipeToPost: {},
 
+            // state relating to modal
             modalIcon: <RiErrorWarningLine />,
             modalTitle: '',
             modalContent: '',

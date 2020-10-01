@@ -3,10 +3,11 @@ import './SearchBy.css';
 
 import { Link, Redirect } from 'react-router-dom';
 
-import { RiShoppingBasket2Line } from "react-icons/ri";
+import { RiShoppingBasket2Line, RiErrorWarningLine } from "react-icons/ri";
 import { BiFoodMenu } from "react-icons/bi";
 
 import { ItemizedList } from '../../../utils/itemized-list';
+import { Modal } from '../../../utils/modal';
 
 class SearchByIngre extends React.Component {
     constructor(props) {
@@ -31,7 +32,14 @@ class SearchByIngre extends React.Component {
 
             // state relating to individual ingre searched, before being added to the ingre list
             includeIngreInput: '',
-            excludeIngreInput: ''
+            excludeIngreInput: '',
+
+            // state relating to modal
+            modalIcon: <RiErrorWarningLine />,
+            modalTitle: 'Warning',
+            modalContent: '',
+            modalButton: 'okay',
+            displayModal: false
         }
 
         this.updateSearchValue = this.updateSearchValue.bind(this);
@@ -46,6 +54,8 @@ class SearchByIngre extends React.Component {
         this.removeExcludeIngre = this.removeExcludeIngre.bind(this);
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+
+        this.hideModal = this.hideModal.bind(this)
     }
 
     updateSearchValue(event) {
@@ -76,7 +86,10 @@ class SearchByIngre extends React.Component {
         } else if (event.key !== "Enter") {
             return;
         } else if (this.state.excludeIngre.find(ingre => ingre === this.state.includeIngreInput) || this.state.includeIngre.find(ingre => ingre === this.state.includeIngreInput)) {
-            alert('Duplicate item found.');
+            this.setState({
+                modalContent: 'Duplicate item found.',
+                displayModal: true
+            });
             return;
         } else {
             includeIngreArray.push(this.state.includeIngreInput);
@@ -96,7 +109,10 @@ class SearchByIngre extends React.Component {
         } else if (event.key !== "Enter") {
             return;
         } else if (this.state.includeIngre.find(ingre => ingre === this.state.excludeIngreInput) || this.state.excludeIngre.find(ingre => ingre === this.state.excludeIngreInput)) {
-            alert('Duplicate item found.');
+            this.setState({
+                modalContent: 'Duplicate item found.',
+                displayModal: true
+            });
             return;
         } else {
             excludeIngreArray.push(this.state.excludeIngreInput);
@@ -130,11 +146,13 @@ class SearchByIngre extends React.Component {
     }
 
     // this handles form submit
-
     handleFormSubmit(event) {
         // checks if any ingredients are added
         if (this.state.includeIngre.length <= 0 && this.state.excludeIngre.length <= 0) {
-            alert('You have not added any ingredients to include or exclude.');
+            this.setState({
+                modalContent: 'You have not added any ingredients to include or exclude.',
+                displayModal: true
+            });
             return;
         } else if (event.key !== "Enter") {
             return;
@@ -162,6 +180,11 @@ class SearchByIngre extends React.Component {
         })
     }
 
+    // function to hide modal
+    hideModal() {
+        this.setState({displayModal: false})
+    }
+
     componentDidMount() {
         this.props.hideMenuDisplay();
     }
@@ -179,49 +202,59 @@ class SearchByIngre extends React.Component {
             return <Redirect to={`/search-results`} />
         } else {
             return (
-                <div className="advanced-search-main">
-                    <h1>Advanced Search</h1>
-    
-                    {/* the below renders the main search bar */}
-    
-                    <div className="advanced-search-bar">
-                        <div>
-                            <input className='advanced-search-input' type="text" value={this.state.searchValue} onChange={this.updateSearchValue} onKeyPress={this.handleFormSubmit} />
-                            <div className='search-by'>
-                                <Link to="/search-by-recipe"><div className={searchByRecipe} id="link"><BiFoodMenu /><span className="search-by-words">Search by</span>&nbsp;Recipe</div></Link>
-                                <div className={searchByIngre} id="link"><RiShoppingBasket2Line /><span className="search-by-words">Search by</span>&nbsp;Ingredients</div>
+                <div>
+                    <Modal 
+                        displayModal={this.state.displayModal}
+                        handleClose={this.hideModal}
+                        modalIcon={this.state.modalIcon}
+                        modalTitle={this.state.modalTitle}
+                        modalContent={this.state.modalContent}
+                        modalButton={this.state.modalButton}
+                    />
+                    <div className="advanced-search-main">
+                        <h1>Advanced Search</h1>
+        
+                        {/* the below renders the main search bar */}
+        
+                        <div className="advanced-search-bar">
+                            <div>
+                                <input className='advanced-search-input' type="text" value={this.state.searchValue} onChange={this.updateSearchValue} onKeyPress={this.handleFormSubmit} />
+                                <div className='search-by'>
+                                    <Link to="/search-by-recipe"><div className={searchByRecipe} id="link"><BiFoodMenu /><span className="search-by-words">Search by</span>&nbsp;Recipe</div></Link>
+                                    <div className={searchByIngre} id="link"><RiShoppingBasket2Line /><span className="search-by-words">Search by</span>&nbsp;Ingredients</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-    
-                    {/* the below renders the ingredient filters */}
-    
-                    <div className="search-by-container">
-                        <div className="ingredients-component">
-                            <h3>Ingredients to Include</h3>
-                            <input className="ingre-input" type="text" value={this.state.includeIngreInput} onChange={this.updateIncludeIngreInput} onKeyPress={this.updateIncludeIngre} />
-                            <input type="submit" value="Include" onClick={() => this.updateIncludeIngre({key: "Enter"})} />
-                            <div className="ingre-input-container">
-                                {this.state.includeIngre.map((ingredient, index) => 
-                                    <div className={includeIngreStatus} key={index}>
-                                        <ItemizedList item={ingredient} handleClick={() => this.removeIncludeIngre(ingredient)} />
-                                    </div>)}
+        
+                        {/* the below renders the ingredient filters */}
+        
+                        <div className="search-by-container">
+                            <div className="ingredients-component">
+                                <h3>Ingredients to Include</h3>
+                                <input className="ingre-input" type="text" value={this.state.includeIngreInput} onChange={this.updateIncludeIngreInput} onKeyPress={this.updateIncludeIngre} />
+                                <input type="submit" value="Include" onClick={() => this.updateIncludeIngre({key: "Enter"})} />
+                                <div className="ingre-input-container">
+                                    {this.state.includeIngre.map((ingredient, index) => 
+                                        <div className={includeIngreStatus} key={index}>
+                                            <ItemizedList item={ingredient} handleClick={() => this.removeIncludeIngre(ingredient)} />
+                                        </div>)}
+                                </div>
+                            </div>
+                            <div className="ingredients-component">
+                                <h3>Ingredients to Exclude</h3>
+                                <input className="ingre-input" type="text" value={this.state.excludeIngreInput} onChange={this.updateExcludeIngreInput} onKeyPress={this.updateExcludeIngre} />
+                                <input type="submit" value="Exclude" onClick={() => this.updateExcludeIngre({key: "Enter"})} />
+                                <div className="ingre-input-container">
+                                    {this.state.excludeIngre.map((ingredient, index) => 
+                                        <div className={excludeIngreStatus} key={index}>
+                                            <ItemizedList item={ingredient} handleClick={() => this.removeExcludeIngre(ingredient)} />
+                                        </div>)}
+                                </div>
                             </div>
                         </div>
-                        <div className="ingredients-component">
-                            <h3>Ingredients to Exclude</h3>
-                            <input className="ingre-input" type="text" value={this.state.excludeIngreInput} onChange={this.updateExcludeIngreInput} onKeyPress={this.updateExcludeIngre} />
-                            <input type="submit" value="Exclude" onClick={() => this.updateExcludeIngre({key: "Enter"})} />
-                            <div className="ingre-input-container">
-                                {this.state.excludeIngre.map((ingredient, index) => 
-                                    <div className={excludeIngreStatus} key={index}>
-                                        <ItemizedList item={ingredient} handleClick={() => this.removeExcludeIngre(ingredient)} />
-                                    </div>)}
-                            </div>
+                        <div className="advanced-search-button" onClick={() => this.handleFormSubmit({key: "Enter"})}>
+                            Advanced Search
                         </div>
-                    </div>
-                    <div className="advanced-search-button" onClick={() => this.handleFormSubmit({key: "Enter"})}>
-                        Advanced Search
                     </div>
                 </div>
             )
