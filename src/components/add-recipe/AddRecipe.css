@@ -37,7 +37,20 @@
     }
 }
 
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 650px) {
+    .add-recipe-main-container {
+        width: 90vw;
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 580px) {
+    .add-recipe-main-container {
+        width: 95vw;
+    }
+}
+
+@media only screen and (max-width: 500px) {
     .add-recipe-main-container h1 {
         font-size: 45px;
     }
@@ -116,6 +129,30 @@
     cursor: pointer;
 }
 
+@media only screen and (max-width: 830px) {
+    .add-recipe-image-container {
+        width: 210px;
+        height: 140px;
+    }
+
+    .add-recipe-image-delete {
+        margin: 35px 65px;
+        font-size: 80px
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .add-recipe-image-container {
+        width: 150px;
+        height: 100px;
+    }
+
+    .add-recipe-image-delete {
+        margin: 20px 45px;
+        font-size: 60px
+    }
+}
+
 /* styles for container with checkboxes */
 
 .add-recipe-main-checkbox-container {
@@ -138,26 +175,38 @@
     border-top: dotted 2px grey;
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 1220px) {
     .add-recipe-checkbox-container, .add-recipe-checkbox {
-        width: 90%;
         font-size: 0.96rem;
     }
+    
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1024px) {
     .add-recipe-main-checkbox-container {
         width: 80%;
     }
 }
 
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 560px) {
     .add-recipe-main-checkbox-container {
+        flex-wrap: wrap;
+        justify-content: center;
         width: 90%;
     }
 
     .add-recipe-checkbox-container, .add-recipe-checkbox {
         font-size: 0.9rem;
+    }
+}
+
+@media only screen and (max-width: 460px) {
+    .add-recipe-main-checkbox-container {
+        
+    }
+
+    .add-recipe-checkbox-container {
+        width: 100%;
     }
 }
 
