@@ -194,8 +194,15 @@ a {
     }
 }
 
+@media only screen and (max-width: 950px) {
+    .menu {
+        width: 22%;
+    }
+}
+
 @media only screen and (max-width: 768px) {
     .menu {
+        width: 18%;
         font-size: 20px;
     }
 
@@ -204,8 +211,27 @@ a {
     }
 }
 
+@media only screen and (max-width: 670px) {
+    .menu {
+        width: 22%;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .menu {
+        width: 28%;
+    }
+}
+
 @media only screen and (max-width: 425px) {
     .menu {
         width: 30%;
+    }
+}
+
+
+@media only screen and (max-width: 400px) {
+    .menu {
+        width: 40%;
     }
 }
