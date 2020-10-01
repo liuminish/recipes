@@ -111,39 +111,46 @@ recipesRouter.get('/', (req, res, next) => {
         // search with ingredient filters
         else if (req.query.inclIngre || req.query.exclIngre) {
             const { inclIngre, exclIngre } = req.query;
+            console.log("exclIngre", exclIngre);
+            console.log("inclIngre", inclIngre);
+
             let sqlInclIngre = '';
             let sqlExclIngre = '';
 
             if (Array.isArray(inclIngre)) {
                 sqlInclIngre = inclIngre.reduce((acc, curr) => {
-                    const str = `ingredients LIKE '%${curr}%'`
+                    const str = `ingredients LIKE '%${curr}%' OR`
                     
                     if (acc) {
-                        return acc = `${acc} OR ${str}`
+                        return acc = `${acc} ${str}`
                     } else
                     return str
     
-                }, '');
+                }, 'AND').slice(0,-2)
+            } else if (!inclIngre) {
+                sqlInclIngre = ''
             } else {
-                sqlInclIngre = `ingredients LIKE '%${inclIngre}%'`
+                sqlInclIngre = `AND ingredients LIKE '%${inclIngre}%'`
             }
             
             if (Array.isArray(exclIngre)) {
                 sqlExclIngre = exclIngre.reduce((acc, curr) => {
-                    const str = `ingredients NOT LIKE '%${curr}%'`
+                    const str = `ingredients NOT LIKE '%${curr}%' OR`
                     
                     if (acc) {
                         return acc = `${acc} AND ${str}`
                     } else
                     return str
     
-                }, '');
+                }, 'AND ').slice(0,-2)
+            }  else if (!exclIngre) {
+                sqlExclIngre = ''
             } else {
-                sqlExclIngre = `ingredients NOT LIKE '%${exclIngre}%'`
+                sqlExclIngre = `AND ingredients NOT LIKE '%${exclIngre}%'`
             }
             
             
-            const sql = `SELECT * FROM Recipes WHERE name LIKE '%${name}%' AND (${sqlInclIngre}) AND ${sqlExclIngre}`;
+            const sql = `SELECT * FROM Recipes WHERE name LIKE '%${name}%' ${sqlInclIngre} ${sqlExclIngre}`;
             console.log(sql);
             
             db.all(sql, (err, recipes) => {
