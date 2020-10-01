@@ -70,8 +70,8 @@ class AddRecipe extends React.Component {
             // below state stores current recipe to post
             recipeToPost: {},
 
-            displayModal: false,
-            modalContent: ''
+            displayModal: true,
+            modalContent: 'sample text'
         }
 
         this.onImageChange = this.onImageChange.bind(this);

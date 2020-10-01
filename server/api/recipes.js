@@ -98,6 +98,7 @@ recipesRouter.get('/', (req, res, next) => {
             }
             
             const sql = `SELECT * FROM Recipes WHERE name LIKE '%${name}%' AND (${sqlCuisine}) AND (${sqlMeal}) AND (${sqlStyle})`;
+            console.log(sql)
 
             db.all(sql, (err, recipes) => {
                 if (err) {
@@ -151,8 +152,7 @@ recipesRouter.get('/', (req, res, next) => {
             
             
             const sql = `SELECT * FROM Recipes WHERE name LIKE '%${name}%' ${sqlInclIngre} ${sqlExclIngre}`;
-            console.log(sql);
-            
+
             db.all(sql, (err, recipes) => {
                 if (err) {
                     next(err)
