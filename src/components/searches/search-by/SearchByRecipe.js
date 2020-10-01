@@ -247,23 +247,29 @@ class SearchByRecipe extends React.Component {
             
                                 <div className="search-by-detailed">
                                     <h3>Cuisine Type</h3>
-                                    {cuisineOptions.map(option => {
-                                        return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option]} />
-                                    })}
+                                    <div className="checkbox-main-container">
+                                        {cuisineOptions.map(option => {
+                                            return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option]} />
+                                        })}
+                                    </div>
                                 </div>  
             
                                 <div className="search-by-detailed">
                                     <h3>Meal Type</h3>
-                                    {mealOptions.map(option => {
-                                        return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option]} />
-                                    })}
+                                    <div className="checkbox-main-container">
+                                        {mealOptions.map(option => {
+                                            return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option]} />
+                                        })}
+                                    </div>
                                 </div>
                                 
                                 <div className="search-by-detailed">
                                     <h3>Cooking Style</h3>
-                                    {styleOptions.map(option => {
-                                        return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option]} />
-                                    })}
+                                    <div className="checkbox-main-container">
+                                        {styleOptions.map(option => {
+                                            return <Checkbox className="search-by-detailed-checkbox" label={option} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option]} />
+                                        })}
+                                    </div>
                                 </div>  
                                     
                             </div>
