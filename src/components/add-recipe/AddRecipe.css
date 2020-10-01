@@ -169,14 +169,14 @@
     text-align: left;
 }
 
-.add-recipe-checkbox {
+.add-recipe-checkbox-sub-container {
     font-size: 1rem;
     margin: 5px 0 3px 0;
-    border-top: dotted 2px grey;
+    border-top: dotted 2px rgb(197, 196, 196);
 }
 
 @media only screen and (max-width: 1220px) {
-    .add-recipe-checkbox-container, .add-recipe-checkbox {
+    .add-recipe-checkbox-container, .add-recipe-checkbox-sub-container {
         font-size: 0.96rem;
     }
     
@@ -188,25 +188,29 @@
     }
 }
 
-@media only screen and (max-width: 560px) {
+@media only screen and (max-width: 615px) {
     .add-recipe-main-checkbox-container {
         flex-wrap: wrap;
         justify-content: center;
-        width: 90%;
-    }
-
-    .add-recipe-checkbox-container, .add-recipe-checkbox {
-        font-size: 0.9rem;
-    }
-}
-
-@media only screen and (max-width: 460px) {
-    .add-recipe-main-checkbox-container {
-        
+        width: 100%;
     }
 
     .add-recipe-checkbox-container {
-        width: 100%;
+        width: 80%;
+        max-width: 80%;
+        margin: 8px 0;
+        text-align: center;
+    }
+
+    .add-recipe-checkbox-container p {
+        padding: 0;
+    }
+
+    .add-recipe-checkbox-sub-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        padding-top: 5px;
     }
 }
 

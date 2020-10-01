@@ -771,27 +771,27 @@ class AddRecipe extends React.Component {
                             <div className="add-recipe-main-checkbox-container">
                                 <div className="add-recipe-checkbox-container">
                                     <p>Cuisine Type</p>
-                                    <p className="add-recipe-checkbox">
+                                    <div className="add-recipe-checkbox-sub-container">
                                         {this.props.cuisineTypes.map(option => {
                                         return <Checkbox className="add-recipe-checkbox" label={option.type} key={option.type} onCheckboxChange={this.handleCuisineCheckboxChange} isSelected={this.state.cuisineTypes[option.type]} />
                                         })}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className="add-recipe-checkbox-container">
                                     <p>Meal Type</p>
-                                    <p className="add-recipe-checkbox">
+                                    <div className="add-recipe-checkbox-sub-container">
                                         {this.props.mealTypes.map(option => {
                                         return <Checkbox label={option.type} key={option.type} onCheckboxChange={this.handleMealCheckboxChange} isSelected={this.state.mealTypes[option.type]} />
                                         })}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className="add-recipe-checkbox-container">
                                     <p>Cooking Style</p>
-                                    <p className="add-recipe-checkbox">
+                                    <div className="add-recipe-checkbox-sub-container">
                                         {this.props.cookingStyles.map(option => {
                                         return <Checkbox className="add-recipe-checkbox" key={option.type} label={option.type} onCheckboxChange={this.handleStyleCheckboxChange} isSelected={this.state.cookingStyles[option.type]} />
                                         })}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
