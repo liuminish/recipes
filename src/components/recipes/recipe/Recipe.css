@@ -60,4 +60,9 @@ img {
         width: 40%;
         font-size: 10px;
     }
+
+    .image-container {
+        height: 100px;
+        width: 100%;
+    }
 }
