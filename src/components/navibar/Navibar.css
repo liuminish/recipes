@@ -188,7 +188,7 @@ a {
     color: grey;
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 1300px) {
     .menu {
         width: 18%;
     }
