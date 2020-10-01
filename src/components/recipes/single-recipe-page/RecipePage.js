@@ -1,20 +1,25 @@
 import React from 'react';
 import './RecipePage.css';
 
-import { RiTeamLine, RiStickyNoteLine, RiLoader5Fill } from "react-icons/ri";
+import { RiTeamLine, RiStickyNoteLine, RiLoader5Fill, RiDeleteBinLine } from "react-icons/ri";
 import { withRouter } from 'react-router-dom'
 import { BiTime } from "react-icons/bi";
 import { Link, Redirect } from 'react-router-dom';
 import fetchData from '../../../utils/fetch-data';
+
+import { ModalExtended } from '../../../utils/modal';
 
 class RecipePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             redirect: false,
-            isFetching: false
+            isFetching: false,
+            displayModal: false
         }
         this.deleteRecipe = this.deleteRecipe.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
     }
 
     async componentDidMount() {
@@ -26,14 +31,17 @@ class RecipePage extends React.Component {
     }
 
     deleteRecipe() {
-        if (window.confirm('Confirm delete recipe?')) {
-            fetchData.deleteRecipe(this.props.currentRecipe.id).then(
-                this.setState({redirect: true})
-            )
-            alert('Recipe deleted.')
-        } else {
-            return;
-        }
+        fetchData.deleteRecipe(this.props.currentRecipe.id).then(
+            this.setState({redirect: true})
+        )
+    }
+
+    showModal() {
+        this.setState({displayModal: true})
+    }
+
+    hideModal() {
+        this.setState({displayModal: false})
     }
 
     render() {
@@ -52,6 +60,15 @@ class RecipePage extends React.Component {
 
             return (
                 <div>
+                    <ModalExtended 
+                        displayModal={this.state.displayModal}
+                        handleOk={this.deleteRecipe}
+                        handleClose={this.hideModal}
+                        modalIcon={<RiDeleteBinLine />}
+                        modalTitle='Delete recipe'
+                        modalContent='Are you sure?'
+                        modalButton={this.state.modalButton}
+                    />
                     <div className="recipe-page">
 
                         <div className="recipe-page-part-one">
@@ -120,7 +137,7 @@ class RecipePage extends React.Component {
                         </div>
                         </Link>
                         
-                        <div className="edit-buttons" onClick={this.deleteRecipe}>
+                        <div className="edit-buttons" onClick={this.showModal}>
                             Delete
                         </div>
 

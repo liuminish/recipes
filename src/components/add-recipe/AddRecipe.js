@@ -6,7 +6,9 @@ import { ItemizedListExtended, ItemizedListNoDelete } from '../../utils/itemized
 import fetchData from '../../utils/fetch-data';
 import { Modal } from '../../utils/modal';
 
-import { RiAddLine, RiDeleteBinLine, RiArrowUpCircleLine, RiArrowDownCircleLine, RiEdit2Line, RiLoader5Fill } from "react-icons/ri";
+import { RiAddLine, RiDeleteBinLine, RiArrowUpCircleLine, RiArrowDownCircleLine, RiEdit2Line, RiLoader5Fill, RiErrorWarningLine } from "react-icons/ri";
+import { GiFoodTruck } from "react-icons/gi";
+
 import { Redirect } from 'react-router-dom';
 
 import UploadLogo from '../../media/upload_logo.png';
@@ -70,8 +72,11 @@ class AddRecipe extends React.Component {
             // below state stores current recipe to post
             recipeToPost: {},
 
-            displayModal: true,
-            modalContent: 'sample text'
+            modalIcon: <RiErrorWarningLine />,
+            modalTitle: '',
+            modalContent: '',
+            modalButton: '',
+            displayModal: false
         }
 
         this.onImageChange = this.onImageChange.bind(this);
@@ -108,7 +113,7 @@ class AddRecipe extends React.Component {
         this.clearRecipe = this.clearRecipe.bind(this);
         this.toAllRecipes = this.toAllRecipes.bind(this);
 
-        this.changeModalDisplay = this.changeModalDisplay.bind(this)
+        this.hideModal = this.hideModal.bind(this)
 
     }
     
@@ -212,7 +217,13 @@ class AddRecipe extends React.Component {
         if (this.state.currentIngreAmount === '' || this.state.currentIngre === '' ) {
             return;
         } else if (this.state.currentIngreAmount < 1) {
-            alert('Please input valid ingredient.');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please input valid ingredient.',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } else if (event.key !== "Enter") {
             return;
@@ -285,7 +296,13 @@ class AddRecipe extends React.Component {
         
         // check if duplicate instructions
         else if (this.state.instructList.find(instruct => instruct === this.state.currentInstruct)) {
-            alert('Duplicated instructions.');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Duplicated instructions',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } 
         
@@ -385,7 +402,13 @@ class AddRecipe extends React.Component {
         } else if (!this.state.image.type) {
             return
         } else if (!this.state.image.type.match(imageType)) {
-            alert('Sorry, only images are allowed.')
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Sorry, only images are allowed.',
+                modalButton: 'close',
+                displayModal: true
+            });
             return
         } else {
             return fetchData.uploadImage(this.state.image).then(fileName => {
@@ -444,28 +467,76 @@ class AddRecipe extends React.Component {
 
         // checking for invalid inputs
         if (recipeName === '') {
-            alert('Please ensure you have filled in a name for the recipe');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please fill in a name for the recipe.',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } else if (isNaN(recipeTime) || recipeTime <= 0 || recipeTime === '') {
-            alert('Please input valid "Time needed".');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please input valid "Time needed".',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } else if (isNaN(recipeServings) || recipeServings <= 0) {
-            alert('Please input valid "Servings".');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please input valid "Servings".',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } else if (chosenMealTypes.length <= 0) {
-            alert('Please choose at least one meal type.');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please choose at least one meal type.',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } else if (chosenCuisineTypes.length <= 0) {
-            alert('Please choose at least one cuisine type.');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please choose at least one cuisine type.',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } else if (chosenStyleTypes.length <= 0) {
-            alert('Please choose at least one cooking style.');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please choose at least one cooking style.',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } else if (addedIngreList.length <= 0) {
-            alert('Please add at least one ingredient.');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please add at least one ingredient.',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         } else if (instructList.length <= 0) {
-            alert('Please add at least one instruction.');
+            this.setState({
+                modalIcon: <RiErrorWarningLine />,
+                modalTitle: 'Warning',
+                modalContent: 'Please add at least one instruction.',
+                modalButton: 'close',
+                displayModal: true
+            });
             return;
         }
 
@@ -512,9 +583,12 @@ class AddRecipe extends React.Component {
         } else {
             await fetchData.createRecipe(this.state.recipeToPost);
             this.setState({
-                modalContent: 'Recipe created.'
-            })
-            this.changeModalDisplay();
+                modalIcon: <GiFoodTruck />,
+                modalTitle: 'Success!',
+                modalContent: 'Recipe added.',
+                modalButton: 'okay',
+                displayModal: true
+            });
             this.props.resetModes();
         }
         
@@ -552,9 +626,12 @@ class AddRecipe extends React.Component {
         } else {
             await fetchData.updateRecipe(this.state.recipeToPost);
             this.setState({
-                modalContent: 'Recipe updated.'
+                modalIcon: <GiFoodTruck />,
+                modalTitle: 'Success!',
+                modalContent: 'Recipe updated.',
+                modalButton: 'okay',
+                displayModal: true
             });
-            this.changeModalDisplay();
             this.props.resetModes();
         }
     }
@@ -566,14 +643,16 @@ class AddRecipe extends React.Component {
     }
 
     // function to close modal
-    changeModalDisplay() {
-        if (this.state.displayModal) {
+    hideModal() {
+        if (this.state.modalButton === 'okay') {
             this.setState({
                 displayModal: false,
                 isRedirect: true
             })
-        } else {
-            this.setState({displayModal: true})
+        } else if (this.state.modalButton === 'close') {
+            this.setState({
+                displayModal: false
+            })
         }
         
     }
@@ -649,8 +728,11 @@ class AddRecipe extends React.Component {
             <div>
                 <Modal 
                         displayModal={this.state.displayModal}
-                        handleClose={this.changeModalDisplay}
+                        handleClose={this.hideModal}
+                        modalIcon={this.state.modalIcon}
+                        modalTitle={this.state.modalTitle}
                         modalContent={this.state.modalContent}
+                        modalButton={this.state.modalButton}
                     />
                 <div className="add-recipe-main-container">
 
