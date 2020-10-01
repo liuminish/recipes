@@ -112,7 +112,7 @@
 }
 
 .add-recipe-image-container:hover > .add-recipe-image {
-    opacity: 30%;
+    opacity: 0.3;
     cursor: pointer;
 }
 
@@ -120,7 +120,7 @@
     margin: 50px 100px;
     position: absolute;
     font-size: 100px;
-    opacity: 50%;
+    opacity: 0.5;
     color: black;
 }
 

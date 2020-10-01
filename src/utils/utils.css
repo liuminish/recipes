@@ -34,7 +34,7 @@
     width: 100vw;
     height: 100vh;
     background: black;
-    opacity: 50%;
+    opacity: 0.5;
 }
 
 .modal-icon {
